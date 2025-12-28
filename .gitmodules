@@ -1,0 +1,6 @@
+[submodule "godot-cpp"]
+	path = godot-cpp
+	url = git@github.com:godotengine/godot-cpp.git
+[submodule "OpenMultitouchSupport"]
+	path = OpenMultitouchSupport
+	url = git@github.com:Kyome22/OpenMultitouchSupport.git

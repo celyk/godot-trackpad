@@ -29,7 +29,12 @@
 #include <gdextension_interface.h>
 
 //#include "OpenMultitouchSupportXCF.h"
-#import <OpenMultitouchSupportXCF.h>
+//#import <OpenMultitouchSupportXCF.h>
+
+//#import <OpenMultitouchSupportXCF/OpenMultitouchSupportXCF.h>
+#import <OpenMultitouchSupportXCF/OpenMultitouchSupportXCF.h>
+//#import <OpenMultitouchSupport/OpenMultitouchSupport.h>
+//@import OpenMultitouchSupport;
 
 using namespace godot;
 

@@ -28,8 +28,6 @@
 /* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                */
 /*************************************************************************/
 
-#include "OpenMultitouchSupportXCF.h"
-
 #include "arkit_module.h"
 
 #include <godot_cpp/core/version.hpp>

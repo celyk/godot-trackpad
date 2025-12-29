@@ -23,6 +23,19 @@ enum OMSState: String, Sendable {
 class OMSTouchData : public RefCounted {
 	GDCLASS(OMSTouchData, RefCounted);
 
+public:
+	enum OMSState {
+        notTouching,
+        starting,
+        hovering,
+        making,
+        touching,
+        breaking,
+        lingering,
+        leaving
+	};
+
+private:
     int id; //: Int32
     Vector2 position;
     float total; // total value of capacitance
@@ -30,7 +43,7 @@ class OMSTouchData : public RefCounted {
     Vector2 axis;
     float angle; // finger angle
     float density; // area density of capacitance
-    int state; //: OMSState
+    OMSState state; //: OMSState
     String timestamp;
 
 protected:
@@ -41,13 +54,13 @@ public:
     void set_id(int p_id);
     
     Vector2 get_position() const;
-    void set_position(int p_position);
+    void set_position(Vector2 p_position);
     
     float get_total() const;
     void set_total(float p_total);
     
     float get_pressure() const;
-    float set_pressure(float p_pressure);
+    void set_pressure(float p_pressure);
 
     Vector2 get_axis() const;
     void set_axis(Vector2 p_axis);
@@ -58,8 +71,8 @@ public:
     float get_density() const;
     void set_density(float p_density);
 
-    int get_state() const;
-    void set_state(int p_state);
+    OMSState get_state() const;
+    void set_state(OMSState p_state);
 
     String get_timestamp() const;
     void set_timestamp(String p_timestamp);
@@ -70,17 +83,19 @@ class TrackpadServer : public Object {
 	GDCLASS(TrackpadServer, Object);
 
 private:
-
 protected:
 	static void _bind_methods();
 
 public:
-    TrackpadServer(){}
+    TrackpadServer();
     ~TrackpadServer(){}
 
     void registerInputCallback(Callable callback);
 };
 
+
 }
+
+VARIANT_ENUM_CAST(godot::OMSTouchData::OMSState);
 
 #endif /* !TRACKPAD_WRAPPER_H */

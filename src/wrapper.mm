@@ -3,12 +3,37 @@
 
 using namespace godot;
 
+
+#import <OpenMultitouchSupportXCF/OpenMultitouchSupportXCF.h>
+
+
+// --- Interface ---
+@interface MyObjCClass : NSObject
+- (void)handleMultitouchEvent:(OpenMTEvent *)event;
+@end
+
+// --- Implementation ---
+@implementation MyObjCClass
+- (void)handleMultitouchEvent:(OpenMTEvent *)event {
+    // This is where your touch data comes in!
+    NSLog(@"Touch received from OpenMultitouchSupport!");
+}
+@end
+
+
 void TrackpadServer::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("register_input_callback", "callback"), &TrackpadServer::registerInputCallback);
 }
 
-TrackpadServer::TrackpadServer() {
 
+void TrackpadServer::handle_touch_event(Ref<OMSTouchData> event) {
+    // This is where your touch data comes in!
+    NSLog(@"Touch received from OpenMultitouchSupport!");
+}
+
+TrackpadServer::TrackpadServer() {
+	// The manager starts working as soon as you add a listener
+    //[manager addListenerWithTarget:myTouchHandler selector:@selector(handle_touch_event:)];
 }
 
 void TrackpadServer::registerInputCallback(Callable callback) {

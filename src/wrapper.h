@@ -5,6 +5,13 @@
 #include <godot_cpp/core/class_db.hpp>
 #include <godot_cpp/classes/ref.hpp>
 
+// Forward declaration of the Objective-C class
+#ifdef __OBJC__
+@class MyObjCClass;
+#else
+class MyObjCClass;
+#endif
+
 namespace godot{
 
 /*
@@ -19,6 +26,7 @@ enum OMSState: String, Sendable {
     case leaving
 }
 */
+
 
 class OMSTouchData : public RefCounted {
 	GDCLASS(OMSTouchData, RefCounted);
@@ -83,6 +91,9 @@ class TrackpadServer : public Object {
 	GDCLASS(TrackpadServer, Object);
 
 private:
+    MyObjCClass* wrapper;
+    void handle_touch_event(Ref<OMSTouchData> event);
+
 protected:
 	static void _bind_methods();
 

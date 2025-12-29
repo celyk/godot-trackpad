@@ -13,22 +13,6 @@ if env["platform"] in ["macos"]:
     env.Append(LINKFLAGS="-framework Foundation")
     #env.Append(LINKFLAGS="-framework UIKit")
 
-    #env.Append(LIBS=["OpenMultitouchSupport"])
-    #env.Append(LIBPATH=["./OpenMultitouchSupport/Framework/build/Build/Products/Release/Current"])
-    
-    framework_dir = "./OpenMultitouchSupport/Framework/build/Build/Products/Release/OpenMultitouchSupportXCF.framework/Current"
-    framework_dir = "/Users/human/Documents/dev/GitHub/godot-trackpad/OpenMultitouchSupport/Framework/build/Build/Products/Release/OpenMultitouchSupportXCF.framework/Versions/Current"
-    framework_dir = os.path.abspath("./OpenMultitouchSupport/Framework/build/Build/Products/Release/OpenMultitouchSupportXCF.framework/Versions/Current/")
-    framework_dir = "./OpenMultitouchSupport/Framework/build/Build/Products/Release/OpenMultitouchSupportXCF.framework/Versions/Current/"
-    framework_dir = "./OpenMultitouchSupport/Framework/build/Build/Products/Release/OpenMultitouchSupportXCF.framework"
-    framework_dir = "./OpenMultitouchSupport/OpenMultitouchSupportXCF.xcframework/macos-arm64_x86_64/OpenMultitouchSupportXCF.framework"
-    framework_dir = "./OpenMultitouchSupport/OpenMultitouchSupportXCF.xcframework/macos-arm64_x86_64/"
-    
-    
-    
-    #framework_dir = "./OpenMultitouchSupport/OpenMultitouchSupportXCF.xcframework/macos-arm64_x86_64/OpenMultitouchSupportXCF.framework"
-    #env.Append(CPPPATH=["/Users/human/Documents/dev/GitHub/godot-trackpad/OpenMultitouchSupport/Framework/build/Build/Products/Release/OpenMultitouchSupportXCF.framework/Headers"])
-        
     # 1. Define the absolute path to the directory containing the .framework
     # This must be the folder INSIDE the .xcframework
     base_dir = os.getcwd()
@@ -47,43 +31,10 @@ if env["platform"] in ["macos"]:
     inner_header_path = "./OpenMultitouchSupport/OpenMultitouchSupportXCF.xcframework/macos-arm64_x86_64/"
     
     env.Append(CPPPATH=["-F" + inner_header_path]) 
-    env.Append(CXXFLAGS=["-F" + framework_dir])
-    
-    # 3. If OpenMultitouchSupport is a wrapper for the system MultitouchSupport,
-    # you MUST also link the system private framework:
-    # env.Append(LINKFLAGS=[
-    #     "-F/System/Library/PrivateFrameworks",
-    #     "-framework", "MultitouchSupport"
-    # ])
+    env.Append(CXXFLAGS=["-F" + framework_container])
 
-    # Add the directory containing the framework to the search path
-    #env.Append(FRAMEWORKPATH=[framework_dir])
-
-    # Specify the framework name to link against (without the .framework extension)
-    #env.Append(FRAMEWORKS=['OpenMultitouchSupport'])
-
-    #env.Append(LIBPATH=[framework_dir])
-    #env.Append(CPPPATH=[framework_dir + "Headers"])
-    
-    #xcframework = env.XCFramework("./OpenMultitouchSupport/Framework/build/Build/Products/Release/OpenMultitouchSupportXCF.framework")
-    #env.Depends(framework_dir, framework_dir+"Headers")
-
-    #env.Append(LINKFLAGS="-framework OpenMultitouchSupport")
-
-
-    # 1. Add Header Search Paths
-    # Headers are usually in the .framework folder inside the architecture directory
-    #env.Append(CPPPATH=[os.path.join(framework_dir, "/OpenMultitouchSupportXCF.framework/Headers")])
-
-    # 2. Add Framework Search Paths
-    #env.Append(FRAMEWORKPATH=[framework_dir])
-    
-    # 3. Link the Framework
-    # Use the '-framework' flag followed by the framework name
-    #env.Append(FRAMEWORKPATH=["/System/Library/PrivateFrameworks"])
-    #env.Append(LINKFLAGS=["-framework", "OpenMultitouchSupport"])
-    #env.Append(LINKFLAGS=["-framework", "OpenMultitouchSupportXCF"])
-    #env.Append(LINKFLAGS=["-framework", "MultitouchSupport"])
+    # If you put it in a subfolder like Contents/Frameworks in the app bundle:
+    env.Append(LINKFLAGS=["-Wl,-rpath,@loader_path"])
 
     # Compile with debugging symbols
     if ARGUMENTS.get("debugging_symbols") == 'true':

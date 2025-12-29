@@ -1,5 +1,5 @@
 /*************************************************************************/
-/*  arkit_module.h                                                       */
+/*  arkit_module.cpp                                                     */
 /*************************************************************************/
 /*                       This file is part of:                           */
 /*                           GODOT ENGINE                                */
@@ -28,5 +28,19 @@
 /* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                */
 /*************************************************************************/
 
-void register_arkit_types();
-void unregister_arkit_types();
+#include <godot_cpp/core/version.hpp>
+#include <godot_cpp/core/class_db.hpp>
+
+#include "module.h"
+#include "wrapper.h"
+
+using namespace godot;
+
+void register_types() {
+    GDREGISTER_CLASS(TrackpadServer);
+
+    
+}
+
+void unregister_types() {
+}

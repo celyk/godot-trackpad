@@ -1,5 +1,5 @@
 /*************************************************************************/
-/*  arkit_module.cpp                                                     */
+/*  arkit_module.h                                                       */
 /*************************************************************************/
 /*                       This file is part of:                           */
 /*                           GODOT ENGINE                                */
@@ -28,15 +28,5 @@
 /* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                */
 /*************************************************************************/
 
-#include "arkit_module.h"
-
-#include <godot_cpp/core/version.hpp>
-
-#include <godot_cpp/core/class_db.hpp>
-
-
-void register_arkit_types() {
-}
-
-void unregister_arkit_types() {
-}
+void register_types();
+void unregister_types();

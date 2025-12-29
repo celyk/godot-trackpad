@@ -20,7 +20,7 @@
  * SOFTWARE.
  */
 
-#include "arkit_module.h"
+#include "module.h"
 
 #include <godot_cpp/godot.hpp>
 #include <godot_cpp/core/class_db.hpp>
@@ -28,22 +28,48 @@
 
 #include <gdextension_interface.h>
 
-//#include "OpenMultitouchSupportXCF.h"
-//#import <OpenMultitouchSupportXCF.h>
-
-//#import <OpenMultitouchSupportXCF/OpenMultitouchSupportXCF.h>
 #import <OpenMultitouchSupportXCF/OpenMultitouchSupportXCF.h>
-//#import <OpenMultitouchSupport/OpenMultitouchSupport.h>
-//@import OpenMultitouchSupport;
 
 using namespace godot;
+
+// --- Interface ---
+@interface TouchHandler : NSObject
+- (void)handleMultitouchEvent:(OpenMTEvent *)event;
+@end
+
+// --- Implementation ---
+@implementation TouchHandler
+- (void)handleMultitouchEvent:(OpenMTEvent *)event {
+    // This is where your touch data comes in!
+    NSLog(@"Touch received from OpenMultitouchSupport!");
+}
+@end
+
+OpenMTManager* manager;
+
+// Global or static variable to keep the handler alive in memory
+static TouchHandler *myTouchHandler = nil;
 
 static void initialize(ModuleInitializationLevel level) {
 	if (level != MODULE_INITIALIZATION_LEVEL_SCENE) {
 		return;
 	}
 
-	register_arkit_types();
+	register_types();
+
+
+	// 1. Create the instance of your handler class
+	myTouchHandler = [[TouchHandler alloc] init];
+
+	manager = OpenMTManager.sharedManager;
+
+    NSLog(@"initialize from gdextension!");
+
+    // Use the correct method from your .h file
+    //OpenMTManager *manager = [OpenMTManager sharedManager];
+    
+    // The manager starts working as soon as you add a listener
+    [manager addListenerWithTarget:myTouchHandler selector:@selector(handleMultitouchEvent:)];
 }
 
 static void terminate(ModuleInitializationLevel level) {
@@ -51,10 +77,10 @@ static void terminate(ModuleInitializationLevel level) {
 		return;
 	}
 
-	unregister_arkit_types();
+	unregister_types();
 }
 
-extern "C" GDExtensionBool objcgdextension_entrypoint(
+extern "C" GDExtensionBool GDE_EXPORT objcgdextension_entrypoint(
 	GDExtensionInterfaceGetProcAddress p_getprocaccess,
 	GDExtensionClassLibraryPtr p_library,
 	GDExtensionInitialization *r_initialization

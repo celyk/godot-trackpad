@@ -1,0 +1,6 @@
+framework module OpenMultitouchSupportXCF {
+  umbrella header "OpenMultitouchSupportXCF.h"
+  export *
+
+  module * { export * }
+}

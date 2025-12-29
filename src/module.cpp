@@ -30,6 +30,8 @@
 
 #include <godot_cpp/core/version.hpp>
 #include <godot_cpp/core/class_db.hpp>
+//#include <godot_cpp/godot.hpp>
+#include <godot_cpp/classes/engine.hpp>
 
 #include "module.h"
 #include "wrapper.h"
@@ -37,10 +39,14 @@
 using namespace godot;
 
 void register_types() {
+    GDREGISTER_CLASS(OMSTouchData);
     GDREGISTER_CLASS(TrackpadServer);
 
-    
+	TrackpadServer* trackpad_singleton = memnew(TrackpadServer);
+	Engine::get_singleton()->register_singleton("TrackpadServer", trackpad_singleton);
 }
 
 void unregister_types() {
+	Engine::get_singleton()->unregister_singleton("TrackpadServer");
+	//memdelete(link_singleton);
 }

@@ -1,10 +1,11 @@
 #include "wrapper.h"
 #include <godot_cpp/core/class_db.hpp>
 
+#import <OpenMultitouchSupportXCF/OpenMultitouchSupportXCF.h>
+
 using namespace godot;
 
 
-#import <OpenMultitouchSupportXCF/OpenMultitouchSupportXCF.h>
 
 
 // --- Interface ---
@@ -24,6 +25,8 @@ using namespace godot;
 	for (OpenMTTouch* touch in event.touches){
 
 		Ref<OMSTouchData> godot_event;
+		godot_event.instantiate();
+		
 		godot_event->set_id(int(touch.identifier));
 		godot_event->set_position(Vector2(touch.posX, touch.posY));
 		godot_event->set_total(float(touch.total));
@@ -50,7 +53,7 @@ void TrackpadServer::handle_touch_event(Ref<OMSTouchData> event) {
     // This is where your touch data comes in!
     NSLog(@"Touch received from OpenMultitouchSupport!");
 
-	if(!touch_callback.is_null()) {
+	if(touch_callback.is_null()) {
 		return;
 	}
 
@@ -64,6 +67,11 @@ TrackpadServer::TrackpadServer() {
     objc_wrapper->cppInstance = this;
 
     // OR: [objc_wrapper setCppInstance:this];
+
+	OpenMTManager* manager = OpenMTManager.sharedManager;
+
+    // The manager starts working as soon as you add a listener
+    [manager addListenerWithTarget:objc_wrapper selector:@selector(handleMultitouchEvent:)];
 }
 
 void TrackpadServer::registerInputCallback(Callable callback) {
@@ -75,6 +83,25 @@ Vector2 TrackpadServer::getSensorSize() {
 }
 
 void OMSTouchData::_bind_methods() {
+	ClassDB::bind_method(D_METHOD("get_id"), &OMSTouchData::get_id);
+	ClassDB::bind_method(D_METHOD("set_id", "id"), &OMSTouchData::set_id);
+	ClassDB::bind_method(D_METHOD("get_position"), &OMSTouchData::get_position);
+	ClassDB::bind_method(D_METHOD("set_position", "position"), &OMSTouchData::set_position);
+	ClassDB::bind_method(D_METHOD("get_total"), &OMSTouchData::get_total);
+	ClassDB::bind_method(D_METHOD("set_total", "total"), &OMSTouchData::set_total);
+	ClassDB::bind_method(D_METHOD("get_pressure"), &OMSTouchData::get_pressure);
+	ClassDB::bind_method(D_METHOD("set_pressure", "pressure"), &OMSTouchData::set_pressure);
+	ClassDB::bind_method(D_METHOD("get_axis"), &OMSTouchData::get_axis);
+	ClassDB::bind_method(D_METHOD("set_axis", "axis"), &OMSTouchData::set_axis);
+	ClassDB::bind_method(D_METHOD("get_angle"), &OMSTouchData::get_angle);
+	ClassDB::bind_method(D_METHOD("set_angle", "angle"), &OMSTouchData::set_angle);
+	ClassDB::bind_method(D_METHOD("get_density"), &OMSTouchData::get_density);
+	ClassDB::bind_method(D_METHOD("set_density", "density"), &OMSTouchData::set_density);
+	ClassDB::bind_method(D_METHOD("get_state"), &OMSTouchData::get_state);
+	ClassDB::bind_method(D_METHOD("set_state", "state"), &OMSTouchData::set_state);
+	ClassDB::bind_method(D_METHOD("get_timestamp"), &OMSTouchData::get_timestamp);
+	ClassDB::bind_method(D_METHOD("set_timestamp", "timestamp"), &OMSTouchData::set_timestamp);
+
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "id"), "set_id", "get_id");
 	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "position"), "set_position", "get_position");
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "total"), "set_total", "get_total");

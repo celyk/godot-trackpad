@@ -3,6 +3,7 @@
 
 //#include <godot_cpp/core/version.hpp>
 #include <godot_cpp/core/class_db.hpp>
+#include <godot_cpp/core/mutex_lock.hpp>
 #include <godot_cpp/classes/ref.hpp>
 
 // Forward declaration of the Objective-C class
@@ -89,6 +90,7 @@ public:
 
 class TrackpadServer : public Object {
 	GDCLASS(TrackpadServer, Object);
+    //_THREAD_SAFE_CLASS_
 
 private:
     MyObjCClass* objc_wrapper;

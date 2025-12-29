@@ -28,26 +28,17 @@
 /* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                */
 /*************************************************************************/
 
+#include "OpenMultitouchSupportXCF.h"
+
 #include "arkit_module.h"
 
-#include "arkit_interface.h"
 #include <godot_cpp/core/version.hpp>
 
 #include <godot_cpp/core/class_db.hpp>
 
+
 void register_arkit_types() {
-	ClassDB::register_class<ARKitInterface>();
-
-	//Ref<ARKitInterface> arkit_interface;
-	//arkit_interface.instantiate();
-	//XRServer::get_singleton()->add_interface(arkit_interface);
-
-	GDREGISTER_CLASS(ARKitAnchorMesh);
-	GDREGISTER_CLASS(ARKitAnchorImage);
-	
-	//ClassDB::register_class<ARKitAnchorMesh>();
 }
 
 void unregister_arkit_types() {
-	// should clean itself up nicely :)
 }

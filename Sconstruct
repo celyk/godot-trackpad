@@ -1,21 +1,41 @@
 import os
 
 env = SConscript("godot-cpp/SConstruct").Clone()
+#env.Tool("apple", toolpath=["tools"])
 
 # Add support for generating compilation database files
 #env.Tool("compilation_db")
 #compiledb = env.CompilationDatabase("compile_commands.json")
 #env.Alias("compiledb", compiledb)
 
-if env["platform"] in ["macos", "ios"]:
+if env["platform"] in ["macos"]:
     # Compile flags
     env.Append(LINKFLAGS="-framework Foundation")
-    env.Append(LINKFLAGS="-framework UIKit")
-    env.Append(LINKFLAGS="-framework ARKit")
-    env.Append(LINKFLAGS="-framework AVFoundation")
-    env.Append(LINKFLAGS="-framework CoreGraphics")
-    #env.Append(LINKFLAGS="-framework CoreMotion")
-    env.Append(LINKFLAGS="-framework CoreVideo")
+    #env.Append(LINKFLAGS="-framework UIKit")
+
+    #env.Append(LIBS=["OpenMultitouchSupport"])
+    #env.Append(LIBPATH=["./OpenMultitouchSupport/Framework/build/Build/Products/Release/Current"])
+    
+    framework_dir = "./OpenMultitouchSupport/Framework/build/Build/Products/Release/OpenMultitouchSupportXCF.framework/Current"
+    framework_dir = "/Users/human/Documents/dev/GitHub/godot-trackpad/OpenMultitouchSupport/Framework/build/Build/Products/Release/OpenMultitouchSupportXCF.framework/Versions/Current"
+    framework_dir = os.path.abspath("./OpenMultitouchSupport/Framework/build/Build/Products/Release/OpenMultitouchSupportXCF.framework/Versions/Current/")
+    framework_dir = "./OpenMultitouchSupport/Framework/build/Build/Products/Release/OpenMultitouchSupportXCF.framework/Versions/Current/"
+    framework_dir = "./OpenMultitouchSupport/Framework/build/Build/Products/Release/OpenMultitouchSupportXCF.framework"
+    #env.Append(CPPPATH=["/Users/human/Documents/dev/GitHub/godot-trackpad/OpenMultitouchSupport/Framework/build/Build/Products/Release/OpenMultitouchSupportXCF.framework/Headers"])
+    
+    # Add the directory containing the framework to the search path
+    #env.Append(FRAMEWORKPATH=[framework_dir])
+
+    # Specify the framework name to link against (without the .framework extension)
+    #env.Append(FRAMEWORKS=['OpenMultitouchSupport'])
+
+    #env.Append(LIBPATH=[framework_dir])
+    #env.Append(CPPPATH=[framework_dir + "Headers"])
+    
+    #xcframework = env.XCFramework("./OpenMultitouchSupport/Framework/build/Build/Products/Release/OpenMultitouchSupportXCF.framework")
+    env.Depends(framework_dir, framework_dir+"Headers")
+
+    #env.Append(LINKFLAGS="-framework OpenMultitouchSupport")
 
     # Compile with debugging symbols
     if ARGUMENTS.get("debugging_symbols") == 'true':
@@ -37,13 +57,10 @@ if env["platform"] in ["macos", "ios"]:
         for directory in source_directories
     ]
     library = env.SharedLibrary(
-        "addons/godot_arkit/build/libobjcgdextension{}{}".format(env["suffix"], env["SHLIBSUFFIX"]),
+        "addons/godot_trackpad/build/libobjcgdextension{}{}".format(env["suffix"], env["SHLIBSUFFIX"]),
         source=sources,
+        #LIBS=["OpenMultitouchSupport"],
+        #LIBPATH=["OpenMultitouchSupport/Framework/build/Build/Products/Release/"],
     )
-else:
-    '''dummy_env = Environment(CPPPATH="godot-cpp/gdextension")
-    library = dummy_env.SharedLibrary(
-        "addons/godot_arkit/build/libobjcgdextension{}{}".format(env["suffix"], env["SHLIBSUFFIX"]),
-        source="src/dummy_main.c",
-    )'''
+
 Default(library)

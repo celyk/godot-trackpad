@@ -20,6 +20,6 @@ func _draw() -> void:
 	for touch in touches:
 		var normalize_pos := touch.position
 		normalize_pos.y = 1.0 - normalize_pos.y
-		draw_circle(normalize_pos * size, 5, Color.BLUE)
+		draw_circle(normalize_pos * size, 2 + touch.pressure / 40, Color.BLUE)
 	
 	touches.clear()

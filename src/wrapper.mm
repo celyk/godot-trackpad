@@ -8,7 +8,10 @@ using namespace godot;
 
 
 // --- Interface ---
-@interface MyObjCClass : NSObject
+@interface MyObjCClass : NSObject {
+@public
+	TrackpadServer* cppInstance; // Pointer to your C++ class
+}
 - (void)handleMultitouchEvent:(OpenMTEvent *)event;
 @end
 
@@ -17,7 +20,24 @@ using namespace godot;
 - (void)handleMultitouchEvent:(OpenMTEvent *)event {
     // This is where your touch data comes in!
     NSLog(@"Touch received from OpenMultitouchSupport!");
+
+	for (OpenMTTouch* touch in event.touches){
+
+		Ref<OMSTouchData> godot_event;
+		godot_event->set_id(int(touch.identifier));
+		godot_event->set_position(Vector2(touch.posX, touch.posY));
+		godot_event->set_total(float(touch.total));
+		godot_event->set_pressure(float(touch.pressure));
+		godot_event->set_axis(Vector2(touch.minorAxis, touch.majorAxis));
+		godot_event->set_angle(float(touch.angle));
+		godot_event->set_density(float(touch.density));
+		godot_event->set_state((OMSTouchData::OMSState)touch.state);
+		godot_event->set_timestamp(touch.timestamp);
+
+		cppInstance->handle_touch_event(godot_event);
+	}
 }
+
 @end
 
 
@@ -29,15 +49,29 @@ void TrackpadServer::_bind_methods() {
 void TrackpadServer::handle_touch_event(Ref<OMSTouchData> event) {
     // This is where your touch data comes in!
     NSLog(@"Touch received from OpenMultitouchSupport!");
+
+	if(!touch_callback.is_null()) {
+		return;
+	}
+
+	touch_callback.call(event);
 }
 
 TrackpadServer::TrackpadServer() {
-	// The manager starts working as soon as you add a listener
-    //[manager addListenerWithTarget:myTouchHandler selector:@selector(handle_touch_event:)];
+	objc_wrapper = [[MyObjCClass alloc] init];
+    
+    // 2. Set the C++ instance directly
+    objc_wrapper->cppInstance = this;
+
+    // OR: [objc_wrapper setCppInstance:this];
 }
 
 void TrackpadServer::registerInputCallback(Callable callback) {
+	touch_callback = callback;
+}
 
+Vector2 TrackpadServer::getSensorSize() {
+	return Vector2(600, 400);
 }
 
 void OMSTouchData::_bind_methods() {
@@ -49,7 +83,7 @@ void OMSTouchData::_bind_methods() {
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "angle"), "set_angle", "get_angle");
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "density"), "set_density", "get_density");
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "state", PROPERTY_HINT_ENUM, "notTouching,starting,hovering,making,touching,breaking,lingering,leaving"), "set_state", "get_state");
-	ADD_PROPERTY(PropertyInfo(Variant::STRING, "timestamp"), "set_timestamp", "get_timestamp");
+	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "timestamp"), "set_timestamp", "get_timestamp");
 
 	BIND_ENUM_CONSTANT(notTouching);
 	BIND_ENUM_CONSTANT(starting);
@@ -118,9 +152,9 @@ void OMSTouchData::set_state(OMSTouchData::OMSState p_state) {
     state = p_state;
 }
 
-String OMSTouchData::get_timestamp() const {
+double OMSTouchData::get_timestamp() const {
     return timestamp;
 }
-void OMSTouchData::set_timestamp(String p_timestamp) {
+void OMSTouchData::set_timestamp(double p_timestamp) {
     timestamp = p_timestamp;
 }

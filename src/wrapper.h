@@ -52,7 +52,7 @@ private:
     float angle; // finger angle
     float density; // area density of capacitance
     OMSState state; //: OMSState
-    String timestamp;
+    double timestamp;
 
 protected:
 	static void _bind_methods();
@@ -82,8 +82,8 @@ public:
     OMSState get_state() const;
     void set_state(OMSState p_state);
 
-    String get_timestamp() const;
-    void set_timestamp(String p_timestamp);
+    double get_timestamp() const;
+    void set_timestamp(double p_timestamp);
 };
 
 
@@ -91,8 +91,10 @@ class TrackpadServer : public Object {
 	GDCLASS(TrackpadServer, Object);
 
 private:
-    MyObjCClass* wrapper;
-    void handle_touch_event(Ref<OMSTouchData> event);
+    MyObjCClass* objc_wrapper;
+    //friend class MyObjCClass;
+
+    Callable touch_callback;
 
 protected:
 	static void _bind_methods();
@@ -101,7 +103,9 @@ public:
     TrackpadServer();
     ~TrackpadServer(){}
 
+    void handle_touch_event(Ref<OMSTouchData> event);
     void registerInputCallback(Callable callback);
+    Vector2 getSensorSize();
 };
 
 

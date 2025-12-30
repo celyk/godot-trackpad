@@ -81,13 +81,21 @@ void TrackpadServer::registerInputCallback(Callable callback) {
 }
 
 Vector2 TrackpadServer::getSensorSize() {
-	/*if (MTDeviceIsAvailable()) 
-	{
-		MTDeviceRef device;
+	if (MTDeviceIsAvailable()) {
+		OpenMTManager* manager = OpenMTManager.sharedManager;
+		MTDeviceRef device = MTDeviceCreateDefault(); //manager.device;
 		int width, height;
 		OSStatus err = MTDeviceGetSensorSurfaceDimensions(device, &width, &height);
-		if (!err) NSLog(@"Surface Dimensions: %d x %d ", width, height);
-	}*/
+
+		NSLog(@"Surface Dimensions: %d x %d ", width, height);
+
+		if (!err) {
+			NSLog(@"ERROR Surface Dimensions: %d x %d ", width, height);
+			return Vector2(600, 400);
+		}
+
+		return Vector2(width, height);
+	}
 
 	return Vector2(600, 400);
 }

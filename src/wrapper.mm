@@ -48,13 +48,12 @@ using namespace godot;
 
 void TrackpadServer::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("register_input_callback", "callback"), &TrackpadServer::registerInputCallback);
+	ClassDB::bind_method(D_METHOD("get_sensor_size"), &TrackpadServer::getSensorSize);
+	ClassDB::bind_method(D_METHOD("get_sensor_physical_size"), &TrackpadServer::getSensorPhysicalSize);
 }
 
 
 void TrackpadServer::handle_touch_event(Ref<OMSTouchData> event) {
-    // This is where your touch data comes in!
-    NSLog(@"Touch received from OpenMultitouchSupport!");
-
 	if(touch_callback.is_null()) {
 		return;
 	}
@@ -85,19 +84,36 @@ Vector2 TrackpadServer::getSensorSize() {
 		OpenMTManager* manager = OpenMTManager.sharedManager;
 		MTDeviceRef device = MTDeviceCreateDefault(); //manager.device;
 		int width, height;
-		OSStatus err = MTDeviceGetSensorSurfaceDimensions(device, &width, &height);
+		OSStatus err = MTDeviceGetSensorDimensions(device, &width, &height);
 
-		NSLog(@"Surface Dimensions: %d x %d ", width, height);
-
-		if (!err) {
-			NSLog(@"ERROR Surface Dimensions: %d x %d ", width, height);
-			return Vector2(600, 400);
+		if (err != noErr) {
+			NSLog(@"ERROR Dimensions: %d x %d ", width, height);
+			return Vector2(0, 0);
 		}
 
 		return Vector2(width, height);
 	}
 
-	return Vector2(600, 400);
+	return Vector2(0, 0);
+}
+
+// width and height are returned in hundreds of mm
+Vector2 TrackpadServer::getSensorPhysicalSize() {
+	if (MTDeviceIsAvailable()) {
+		OpenMTManager* manager = OpenMTManager.sharedManager;
+		MTDeviceRef device = MTDeviceCreateDefault(); //manager.device;
+		int width, height;
+		OSStatus err = MTDeviceGetSensorSurfaceDimensions(device, &width, &height);
+
+		if (err != noErr) {
+			NSLog(@"ERROR Surface Dimensions: %d x %d ", width, height);
+			return Vector2(0, 0);
+		}
+
+		return Vector2(width, height);
+	}
+
+	return Vector2(0, 0);
 }
 
 void OMSTouchData::_bind_methods() {

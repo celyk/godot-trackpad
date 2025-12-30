@@ -108,6 +108,7 @@ public:
     void handle_touch_event(Ref<OMSTouchData> event);
     void registerInputCallback(Callable callback);
     Vector2 getSensorSize();
+    Vector2 getSensorPhysicalSize();
 };
 
 

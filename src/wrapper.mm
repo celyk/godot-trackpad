@@ -83,15 +83,16 @@ Vector2 TrackpadServer::getSensorSize() {
 	if (MTDeviceIsAvailable()) {
 		OpenMTManager* manager = OpenMTManager.sharedManager;
 		MTDeviceRef device = MTDeviceCreateDefault(); //manager.device;
-		int width, height;
-		OSStatus err = MTDeviceGetSensorDimensions(device, &width, &height);
+		int rows, cols;
+		OSStatus err = MTDeviceGetSensorDimensions(device, &rows, &cols);
 
 		if (err != noErr) {
-			NSLog(@"ERROR Dimensions: %d x %d ", width, height);
+			NSLog(@"ERROR Dimensions: %d x %d ", cols, rows);
 			return Vector2(0, 0);
 		}
 
-		return Vector2(width, height);
+		// Cols should come first because it gives how many lines in the x axis.
+		return Vector2(cols, rows);
 	}
 
 	return Vector2(0, 0);

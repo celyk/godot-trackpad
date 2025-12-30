@@ -24,12 +24,7 @@ void fragment() {
 	
 	d -= point_radius;
 	
-	d = clamp(d, 0.0, 1.0);
+	d = clamp(d+0.5, 0.0, 1.0);
 	
 	COLOR = mix(point_color, COLOR, d);
 }
-
-//void light() {
-//	// Called for every pixel for every light affecting the material.
-//	// Uncomment to replace the default light processing function with this one.
-//}

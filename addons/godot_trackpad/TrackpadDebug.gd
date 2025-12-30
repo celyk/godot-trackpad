@@ -1,5 +1,5 @@
 @tool
-class_name TouchDebug extends Control
+class_name TrackpadDebug extends Control
 
 var touches : Array[OMSTouchData] = []
 
@@ -14,7 +14,7 @@ func _ready() -> void:
 	draw_rect.modulate = Color(0.1,0.1,0.1)
 	draw_rect.material = ShaderMaterial.new()
 	draw_rect.material.shader = preload("./shaders/grid_points.gdshader")
-	draw_rect.material.set_shader_parameter("point_color", Color(0.3,0.3,0.3))
+	draw_rect.material.set_shader_parameter("point_color", Color(0.5,0.5,0.5))
 
 func _on_touch(touch:OMSTouchData):
 	touches.append(touch)
@@ -28,8 +28,6 @@ func _process(delta: float) -> void:
 	#print("Sensor aspect: ", TrackpadServer.get_sensor_size().aspect(), " ", TrackpadServer.get_sensor_physical_size().aspect())
 	
 	var sensor_size := TrackpadServer.get_sensor_size()
-	sensor_size = Vector2(sensor_size.y, sensor_size.x)
-	
 	var sensor_physical_size := TrackpadServer.get_sensor_physical_size()
 	
 	var physical_aspect : float = TrackpadServer.get_sensor_physical_size().aspect()
@@ -37,13 +35,13 @@ func _process(delta: float) -> void:
 	size.x = physical_aspect * size.y
 	
 	draw_rect.material.set_shader_parameter("grid_cell_size", size / sensor_size)
-	
+
 func _draw() -> void:
 	#draw_rect(Rect2(Vector2(), size), Color.BLACK)
 	#draw_texture_rect(,)
 	for touch in touches:
 		var normalize_pos := touch.position
 		normalize_pos.y = 1.0 - normalize_pos.y
-		draw_circle(normalize_pos * size, 2 + touch.pressure / 40, Color.BLUE)
+		draw_circle(normalize_pos * size, (2 + touch.pressure / 40)*4, Color.BLUE)
 	
 	touches.clear()

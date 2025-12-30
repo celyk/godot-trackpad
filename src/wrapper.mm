@@ -3,6 +3,8 @@
 
 #import <OpenMultitouchSupportXCF/OpenMultitouchSupportXCF.h>
 
+#import "OpenMTInternal.h"
+
 using namespace godot;
 
 
@@ -26,7 +28,7 @@ using namespace godot;
 
 		Ref<OMSTouchData> godot_event;
 		godot_event.instantiate();
-		
+
 		godot_event->set_id(int(touch.identifier));
 		godot_event->set_position(Vector2(touch.posX, touch.posY));
 		godot_event->set_total(float(touch.total));
@@ -79,6 +81,14 @@ void TrackpadServer::registerInputCallback(Callable callback) {
 }
 
 Vector2 TrackpadServer::getSensorSize() {
+	/*if (MTDeviceIsAvailable()) 
+	{
+		MTDeviceRef device;
+		int width, height;
+		OSStatus err = MTDeviceGetSensorSurfaceDimensions(device, &width, &height);
+		if (!err) NSLog(@"Surface Dimensions: %d x %d ", width, height);
+	}*/
+
 	return Vector2(600, 400);
 }
 

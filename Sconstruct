@@ -25,17 +25,23 @@ if env["platform"] in ["macos"]:
         "-F" + framework_container, 
         "-framework", "OpenMultitouchSupportXCF"
     ])
+    env.Append(LINKFLAGS=['-F/System/Library/PrivateFrameworks', '-framework', 'MultitouchSupport'])
 
     inner_header_path = os.path.join(framework_container, "/OpenMultitouchSupport.framework/Headers")
     #inner_header_path = "./OpenMultitouchSupport/OpenMultitouchSupportXCF.xcframework/macos-arm64_x86_64/OpenMultitouchSupportXCF.framework/Versions/A/Headers"
     inner_header_path = "./OpenMultitouchSupport/OpenMultitouchSupportXCF.xcframework/macos-arm64_x86_64/"
     
-    env.Append(CPPPATH=["-F" + inner_header_path]) 
+    env.Append(CPPPATH=["-F" + framework_container]) 
     env.Append(CXXFLAGS=["-F" + framework_container])
+    
+    env.Append(CPPPATH=["./OpenMultitouchSupport/Framework/OpenMultitouchSupportXCF"])
+    env.Append(CXXFLAGS=["./OpenMultitouchSupport/Framework/OpenMultitouchSupportXCF"])
 
     # If you put it in a subfolder like Contents/Frameworks in the app bundle:
     env.Append(LINKFLAGS=["-Wl,-rpath,@loader_path"])
 
+    print("Current CPPPATH:", env['CPPPATH'])
+    
     # Compile with debugging symbols
     if ARGUMENTS.get("debugging_symbols") == 'true':
         if "-O2" in env["CCFLAGS"]:

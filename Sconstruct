@@ -41,7 +41,7 @@ if env["platform"] in ["macos"]:
         link_framework(framework_path=framework_container, framework_name="OpenMultitouchSupportXCF", header_path=framework_container)
 
     # In case we can't build the framework. Include it in the root directory
-    framework_container = "./OpenMultitouchSupportXCF.xcframework/macos-arm64_x86_64/"
+    framework_container = "./dependencies/OpenMultitouchSupportXCF.xcframework/macos-arm64_x86_64/"
     if os.path.isdir(framework_container):
         link_framework(framework_path=framework_container, framework_name="OpenMultitouchSupportXCF", header_path=framework_container)
 

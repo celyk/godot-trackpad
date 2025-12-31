@@ -28,7 +28,7 @@
 
 #include <gdextension_interface.h>
 
-#import <OpenMultitouchSupportXCF/OpenMultitouchSupportXCF.h>
+//#import <OpenMultitouchSupportXCF/OpenMultitouchSupportXCF.h>
 
 using namespace godot;
 
@@ -38,20 +38,6 @@ static void initialize(ModuleInitializationLevel level) {
 	}
 
 	register_types();
-
-
-	// 1. Create the instance of your handler class
-	//myTouchHandler = [[TouchHandler alloc] init];
-
-	//manager = OpenMTManager.sharedManager;
-
-    NSLog(@"initialize from gdextension!");
-
-    // Use the correct method from your .h file
-    //OpenMTManager *manager = [OpenMTManager sharedManager];
-    
-    // The manager starts working as soon as you add a listener
-    //[manager addListenerWithTarget:myTouchHandler selector:@selector(handleMultitouchEvent:)];
 }
 
 static void terminate(ModuleInitializationLevel level) {

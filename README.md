@@ -1,7 +1,6 @@
 # Godot trackpad GDExtension
 
-
-An extension that exposes trackpad data via Apples private MultitouchSupport framework
+An addon that exposes trackpad data via Apples private MultitouchSupport framework
 
 # Usage
 
@@ -11,9 +10,9 @@ Create a TrackpadDebug node to see if it works
 
 # Features
 
-[x] Trackpad size
-[x] Complete raw touch data
-[ ] 
+- [x] Query trackpad dimensions
+- [x] Complete raw touch data
+- [ ] Emulate screen touch events
 
 # Build
 

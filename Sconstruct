@@ -1,12 +1,6 @@
 import os
 
 env = SConscript("godot-cpp/SConstruct").Clone()
-#env.Tool("apple", toolpath=["tools"])
-
-# Add support for generating compilation database files
-#env.Tool("compilation_db")
-#compiledb = env.CompilationDatabase("compile_commands.json")
-#env.Alias("compiledb", compiledb)
 
 def link_framework(framework_path, framework_name, header_path=""):
     # Add the framework to scons
@@ -26,11 +20,6 @@ def link_framework(framework_path, framework_name, header_path=""):
 if env["platform"] in ["macos"]:
     # Compile flags
     env.Append(LINKFLAGS="-framework Foundation")
-    #env.Append(LINKFLAGS="-framework UIKit")
-
-    # 1. Define the absolute path to the directory containing the .framework
-    # This must be the folder INSIDE the .xcframework
-    base_dir = os.getcwd()
 
     # Link the MultitouchSupport framework.
     link_framework("/System/Library/PrivateFrameworks", "MultitouchSupport", "/System/Library/PrivateFrameworks")
@@ -72,5 +61,9 @@ if env["platform"] in ["macos"]:
         #LIBS=["OpenMultitouchSupport"],
         #LIBPATH=["OpenMultitouchSupport/Framework/build/Build/Products/Release/"],
     )
+
+    # Copy the framework to the addon.
+    install_list = env.Install("./addons/godot_trackpad/build", os.path.join(framework_container, "OpenMultitouchSupportXCF.framework"))
+    Default(install_list)
 
 Default(library)

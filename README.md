@@ -25,26 +25,30 @@ cd godot-trackpad
 git submodule update --init --recursive
 ```
 
-Build the [OpenMultitouchSupport](https://github.com/Kyome22/OpenMultitouchSupport) framework.
-```bash
-# Build the framework.
-cd ./OpenMultitouchSupport
-./build_framework.sh
-
-# Change back to the root directory for the next step.
-cd ..
-```
-
-If the build fails, it's because the framework needs signing. You can fix it by selecting a team in the Xcode project and rebuild.
-
-Alternatively, you can download the framework from [releases](https://github.com/Kyome22/OpenMultitouchSupport/releases) and place it in the root.
-```
-godot-trackpad/OpenMultitouchSupportXCF.xcframework
-```
-
-Finally build the GDExtension.
+Build the GDExtension.
 ```bash
 scons
 ```
 
-The addon is ready to use.
+The addon should be ready to use.
+
+# Building dependencies
+
+The repo includes the prebuilt framework under `./dependencies/`, but it can be built manually from the submodule.
+
+Build the [OpenMultitouchSupport](https://github.com/Kyome22/OpenMultitouchSupport) framework.
+```bash
+# Build the framework.
+cd ./dependencies/OpenMultitouchSupport
+./build_framework.sh
+cd ../..
+```
+
+Copy the framework out.
+```
+TODO
+```
+
+If the build fails, it's because the framework needs signing. You can fix it by selecting a team in the Xcode project and rebuild.
+
+Alternatively, you can download the framework from [releases](https://github.com/Kyome22/OpenMultitouchSupport/releases).

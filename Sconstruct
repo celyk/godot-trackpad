@@ -8,6 +8,21 @@ env = SConscript("godot-cpp/SConstruct").Clone()
 #compiledb = env.CompilationDatabase("compile_commands.json")
 #env.Alias("compiledb", compiledb)
 
+def link_framework(framework_path, framework_name, header_path=""):
+    # Add the framework to scons
+    env.Append(LINKFLAGS=[
+        "-F" + framework_path,
+        "-framework", framework_name
+    ])
+
+    if header_path == "": return
+
+    # Add the header path to the C++ compiler
+    env.Append(CPPPATH=["-F" + header_path])
+
+    # Add the header path to the Objective-C++ compiler
+    env.Append(CXXFLAGS=["-F" + header_path])
+
 if env["platform"] in ["macos"]:
     # Compile flags
     env.Append(LINKFLAGS="-framework Foundation")
@@ -16,27 +31,27 @@ if env["platform"] in ["macos"]:
     # 1. Define the absolute path to the directory containing the .framework
     # This must be the folder INSIDE the .xcframework
     base_dir = os.getcwd()
-    framework_container = "./OpenMultitouchSupport/OpenMultitouchSupportXCF.xcframework/macos-arm64_x86_64"
+
+    # Link the MultitouchSupport framework.
+    link_framework("/System/Library/PrivateFrameworks", "MultitouchSupport", "/System/Library/PrivateFrameworks")
+
+    # Link the OpenMultitouchSupport framework.
     framework_container = "./OpenMultitouchSupport/Framework/build/Build/Products/Release"
+    if os.path.isdir(framework_container):
+        link_framework(framework_path=framework_container, framework_name="OpenMultitouchSupportXCF", header_path=framework_container)
 
-    # 2. Add as a search path (-F) and link the framework (-framework)
-    env.Append(LINKFLAGS=[
-        "-F" + framework_container, 
-        "-framework", "OpenMultitouchSupportXCF"
-    ])
-    env.Append(LINKFLAGS=['-F/System/Library/PrivateFrameworks', '-framework', 'MultitouchSupport'])
+    # In case we can't build the framework. Include it in the root directory
+    framework_container = "./OpenMultitouchSupportXCF.xcframework/macos-arm64_x86_64/"
+    if os.path.isdir(framework_container):
+        link_framework(framework_path=framework_container, framework_name="OpenMultitouchSupportXCF", header_path=framework_container)
 
-    env.Append(CPPPATH=["-F" + framework_container]) 
-    env.Append(CXXFLAGS=["-F" + framework_container])
-    
+    # Expose the headers from the OpenMultitouchSupport framework. Gives us access to MultitouchSupport functions
     env.Append(CPPPATH=["./OpenMultitouchSupport/Framework/OpenMultitouchSupportXCF"])
     env.Append(CXXFLAGS=["./OpenMultitouchSupport/Framework/OpenMultitouchSupportXCF"])
 
     # If you put it in a subfolder like Contents/Frameworks in the app bundle:
     env.Append(LINKFLAGS=["-Wl,-rpath,@loader_path"])
 
-    print("Current CPPPATH:", env['CPPPATH'])
-    
     # Compile with debugging symbols
     if ARGUMENTS.get("debugging_symbols") == 'true':
         if "-O2" in env["CCFLAGS"]:

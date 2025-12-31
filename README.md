@@ -2,11 +2,14 @@
 
 An addon that exposes trackpad data via Apples private MultitouchSupport framework.
 
+<img width="562" height="347" alt="image" src="https://github.com/user-attachments/assets/b1a1d2ee-d966-481a-a786-e34697d5c3f6" />
+
+
 # Usage
 
 - Copy the GodotTrackpad addon into your project
 - Enable the addon in the project settings
-- Create a TrackpadDebug node to see if it works
+- Create a TrackpadDebug node to test it out
 
 # Features
 

@@ -16,4 +16,8 @@ Create a TrackpadDebug node to see if it works
 
 # Build
 
-Run ./build.sh
+```bash
+cd godot-trackpad
+git submodule update --init --recursive
+./build.sh
+```

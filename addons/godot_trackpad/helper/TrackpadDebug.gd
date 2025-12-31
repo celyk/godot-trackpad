@@ -29,6 +29,8 @@ func _process(delta: float) -> void:
 	draw_rect.material.set_shader_parameter("grid_cell_size", size / sensor_size)
 
 func _draw() -> void:
+	#draw_primitive()
+	
 	for touch in TrackpadServerAddon.touches_cache:
 		var normalize_pos := touch.position
 		normalize_pos.y = 1.0 - normalize_pos.y

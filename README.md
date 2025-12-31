@@ -17,6 +17,10 @@ An addon that exposes trackpad data via Apples private MultitouchSupport framewo
 - [x] Complete raw touch data
 - [ ] Emulate screen touch events
 
+# Supported platforms
+
+Currently only macOS is supported. I'm open to supporting other platforms, but I can't do it without help.
+
 # Building the addon
 
 First clone and initialize the repository:

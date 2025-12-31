@@ -17,15 +17,15 @@ An addon that exposes trackpad data via Apples private MultitouchSupport framewo
 - [x] Complete raw touch data
 - [ ] Emulate screen touch events
 
-# Build
+# Building the addon
 
-First clone and initialize the repo
+First clone and initialize the repository:
 ```bash
 cd godot-trackpad
 git submodule update --init --recursive
 ```
 
-Build the GDExtension.
+Build the GDExtension:
 ```bash
 scons
 ```
@@ -34,21 +34,23 @@ The addon should be ready to use.
 
 # Building dependencies
 
-The repo includes the prebuilt framework under `./dependencies/`, but it can be built manually from the submodule.
+The repository includes the prebuilt framework under `./dependencies/`, but it can be built manually.
 
-Build the [OpenMultitouchSupport](https://github.com/Kyome22/OpenMultitouchSupport) framework.
+Build the [OpenMultitouchSupport](https://github.com/Kyome22/OpenMultitouchSupport) framework:
 ```bash
 # Build the framework.
 cd ./dependencies/OpenMultitouchSupport
 ./build_framework.sh
+
+# Return to the root directory.
 cd ../..
 ```
 
-Copy the framework out.
-```
+Copy the framework out:
+```bash
 TODO
 ```
 
 If the build fails, it's because the framework needs signing. You can fix it by selecting a team in the Xcode project and rebuild.
 
-Alternatively, you can download the framework from [releases](https://github.com/Kyome22/OpenMultitouchSupport/releases).
+Alternatively, you can download the framework from [releases](https://github.com/Kyome22/OpenMultitouchSupport/releases) and place it in the same directory.

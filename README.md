@@ -16,8 +16,21 @@ Create a TrackpadDebug node to see if it works
 
 # Build
 
+Clone and initialize the repo
 ```bash
 cd godot-trackpad
 git submodule update --init --recursive
-./build.sh
 ```
+
+Build the [OpenMultitouchSupport](https://github.com/Kyome22/OpenMultitouchSupport) framework
+```bash
+git submodule update --init --recursive
+```
+
+Build the GDExtension
+```bash
+cd godot-trackpad
+git submodule update --init --recursive
+```
+
+./build.sh

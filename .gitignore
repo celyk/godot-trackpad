@@ -1,6 +1,7 @@
 # Godot 4+ specific ignores
 .godot/
 .nomedia
+*.uid
 
 # Godot-specific ignores
 .import/
@@ -16,6 +17,7 @@ data_*/
 mono_crash.*.json
 
 *.DS_Store
+
 # Build file ignores
 build/
 *.sconsign

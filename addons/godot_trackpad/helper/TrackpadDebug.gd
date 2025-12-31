@@ -24,9 +24,6 @@ func _process(delta: float) -> void:
 	
 	var physical_aspect : float = TrackpadServer.get_digitizer_physical_size().aspect()
 	
-	if Engine.is_editor_hint():
-		print(sensor_physical_size)
-	
 	size.x = physical_aspect * size.y
 	
 	draw_rect.material.set_shader_parameter("grid_cell_size", size / sensor_size)

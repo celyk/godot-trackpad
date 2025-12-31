@@ -16,9 +16,8 @@ if env["platform"] in ["macos"]:
     # 1. Define the absolute path to the directory containing the .framework
     # This must be the folder INSIDE the .xcframework
     base_dir = os.getcwd()
-    framework_container = os.path.join(base_dir, "OpenMultitouchSupport/OpenMultitouchSupport.xcframework/macos-arm64_x86_64")
-    framework_container = "/Users/human/Documents/dev/GitHub/godot-trackpad/OpenMultitouchSupport/OpenMultitouchSupportXCF.xcframework/macos-arm64_x86_64"
     framework_container = "./OpenMultitouchSupport/OpenMultitouchSupportXCF.xcframework/macos-arm64_x86_64"
+    framework_container = "./OpenMultitouchSupport/Framework/build/Build/Products/Release"
 
     # 2. Add as a search path (-F) and link the framework (-framework)
     env.Append(LINKFLAGS=[
@@ -27,10 +26,6 @@ if env["platform"] in ["macos"]:
     ])
     env.Append(LINKFLAGS=['-F/System/Library/PrivateFrameworks', '-framework', 'MultitouchSupport'])
 
-    inner_header_path = os.path.join(framework_container, "/OpenMultitouchSupport.framework/Headers")
-    #inner_header_path = "./OpenMultitouchSupport/OpenMultitouchSupportXCF.xcframework/macos-arm64_x86_64/OpenMultitouchSupportXCF.framework/Versions/A/Headers"
-    inner_header_path = "./OpenMultitouchSupport/OpenMultitouchSupportXCF.xcframework/macos-arm64_x86_64/"
-    
     env.Append(CPPPATH=["-F" + framework_container]) 
     env.Append(CXXFLAGS=["-F" + framework_container])
     

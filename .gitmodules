@@ -2,5 +2,5 @@
 	path = godot-cpp
 	url = git@github.com:godotengine/godot-cpp.git
 [submodule "OpenMultitouchSupport"]
-	path = OpenMultitouchSupport
+	path = dependencies/OpenMultitouchSupport
 	url = git@github.com:Kyome22/OpenMultitouchSupport.git

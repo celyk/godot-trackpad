@@ -13,7 +13,7 @@ using namespace godot;
 // --- Interface ---
 @interface MyObjCClass : NSObject {
 @public
-	TrackpadServer* cppInstance; // Pointer to your C++ class
+	TrackpadServer* cppInstance; // Pointer to the C++ class
 }
 - (void)handleMultitouchEvent:(OpenMTEvent *)event;
 @end
@@ -21,9 +21,6 @@ using namespace godot;
 // --- Implementation ---
 @implementation MyObjCClass
 - (void)handleMultitouchEvent:(OpenMTEvent *)event {
-    // This is where your touch data comes in!
-    NSLog(@"Touch received from OpenMultitouchSupport!");
-
 	for (OpenMTTouch* touch in event.touches){
 
 		Ref<OMSTouchData> godot_event;
@@ -48,8 +45,8 @@ using namespace godot;
 
 void TrackpadServer::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("register_input_callback", "callback"), &TrackpadServer::registerInputCallback);
-	ClassDB::bind_method(D_METHOD("get_sensor_size"), &TrackpadServer::getSensorSize);
-	ClassDB::bind_method(D_METHOD("get_sensor_physical_size"), &TrackpadServer::getSensorPhysicalSize);
+	ClassDB::bind_method(D_METHOD("get_digitizer_resolution"), &TrackpadServer::getDigitizerResolution);
+	ClassDB::bind_method(D_METHOD("get_digitizer_physical_size"), &TrackpadServer::getDigitizerPhysicalSize);
 }
 
 
@@ -63,11 +60,7 @@ void TrackpadServer::handle_touch_event(Ref<OMSTouchData> event) {
 
 TrackpadServer::TrackpadServer() {
 	objc_wrapper = [[MyObjCClass alloc] init];
-    
-    // 2. Set the C++ instance directly
-    objc_wrapper->cppInstance = this;
-
-    // OR: [objc_wrapper setCppInstance:this];
+    objc_wrapper->cppInstance = this; // OR: [objc_wrapper setCppInstance:this];
 
 	OpenMTManager* manager = OpenMTManager.sharedManager;
 
@@ -79,7 +72,7 @@ void TrackpadServer::registerInputCallback(Callable callback) {
 	touch_callback = callback;
 }
 
-Vector2 TrackpadServer::getSensorSize() {
+Vector2i TrackpadServer::getDigitizerResolution() {
 	if (MTDeviceIsAvailable()) {
 		OpenMTManager* manager = OpenMTManager.sharedManager;
 		MTDeviceRef device = MTDeviceCreateDefault(); //manager.device;
@@ -88,18 +81,18 @@ Vector2 TrackpadServer::getSensorSize() {
 
 		if (err != noErr) {
 			NSLog(@"ERROR Dimensions: %d x %d ", cols, rows);
-			return Vector2(0, 0);
+			return Vector2i(0, 0);
 		}
 
 		// Cols should come first because it gives how many lines in the x axis.
-		return Vector2(cols, rows);
+		return Vector2i(cols, rows);
 	}
 
-	return Vector2(0, 0);
+	return Vector2i(0, 0);
 }
 
 // width and height are returned in hundreds of mm
-Vector2 TrackpadServer::getSensorPhysicalSize() {
+Vector2i TrackpadServer::getDigitizerPhysicalSize() {
 	if (MTDeviceIsAvailable()) {
 		OpenMTManager* manager = OpenMTManager.sharedManager;
 		MTDeviceRef device = MTDeviceCreateDefault(); //manager.device;
@@ -108,13 +101,13 @@ Vector2 TrackpadServer::getSensorPhysicalSize() {
 
 		if (err != noErr) {
 			NSLog(@"ERROR Surface Dimensions: %d x %d ", width, height);
-			return Vector2(0, 0);
+			return Vector2i(0, 0);
 		}
 
-		return Vector2(width, height);
+		return Vector2i(width, height);
 	}
 
-	return Vector2(0, 0);
+	return Vector2i(0, 0);
 }
 
 void OMSTouchData::_bind_methods() {

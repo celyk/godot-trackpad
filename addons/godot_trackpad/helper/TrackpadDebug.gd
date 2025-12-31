@@ -1,23 +1,15 @@
 @tool
 class_name TrackpadDebug extends Control
 
-var touches : Array[OMSTouchData] = []
-
 var draw_rect := ColorRect.new()
 func _ready() -> void:
-	if TrackpadServerAddon.singleton:
-		TrackpadServerAddon.singleton.trackpad_touch.connect(_on_touch)
-	
 	add_child(draw_rect)
 	draw_rect.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	draw_rect.z_index = -1
 	draw_rect.modulate = Color(0.1,0.1,0.1)
 	draw_rect.material = ShaderMaterial.new()
-	draw_rect.material.shader = preload("./shaders/grid_points.gdshader")
+	draw_rect.material.shader = preload("../shaders/grid_points.gdshader")
 	draw_rect.material.set_shader_parameter("point_color", Color(0.5,0.5,0.5))
-
-func _on_touch(touch:OMSTouchData):
-	touches.append(touch)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
@@ -37,11 +29,7 @@ func _process(delta: float) -> void:
 	draw_rect.material.set_shader_parameter("grid_cell_size", size / sensor_size)
 
 func _draw() -> void:
-	#draw_rect(Rect2(Vector2(), size), Color.BLACK)
-	#draw_texture_rect(,)
-	for touch in touches:
+	for touch in TrackpadServerAddon.touches_cache:
 		var normalize_pos := touch.position
 		normalize_pos.y = 1.0 - normalize_pos.y
 		draw_circle(normalize_pos * size, (2 + touch.pressure / 40)*4, Color.BLUE)
-	
-	touches.clear()

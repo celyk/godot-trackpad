@@ -3,15 +3,31 @@ extends Node
 
 const max_touches := 10
 
+var prev_touch_events : Array[OMSTouchData] = []
+var touch_events : Array[OMSTouchData] = []
+
 func _ready() -> void:
 	if Engine.is_editor_hint():
 		set_process(false)
+	
+	touch_events.resize(max_touches)
+	touch_events.fill(null)
+	prev_touch_events = touch_events.duplicate()
 
-var prev_touches_cache : Dictionary[int,OMSTouchData] = {}
 func _process(delta: float) -> void:
+	touch_events.fill(null)
+	
+	for touch:OMSTouchData in TrackpadServerAddon.touches_cache.values():
+		var id := get_lowest_index_available_for_touch(touch)
+		
+		if id < max_touches:
+			touch_events[id] = touch
+	
+	#print(touch_events.map(func(e): return str(e.id)+"   " if e else null))
+	
 	for i:int in range(0,max_touches):
-		var prev_touch : OMSTouchData = prev_touches_cache.get(i)
-		var touch := TrackpadServerAddon.touches_cache.get(i)
+		var prev_touch : OMSTouchData = prev_touch_events[i]
+		var touch : OMSTouchData = touch_events[i]
 		
 		if prev_touch == null and touch:
 			var touch_pos : Vector2 = Vector2(touch.position)
@@ -20,7 +36,7 @@ func _process(delta: float) -> void:
 			
 			touch_press(
 					0,
-					get_lowest_index_available_for_touch(touch), 
+					i, 
 					touch_pos.x,
 					touch_pos.y,
 					true,
@@ -33,7 +49,7 @@ func _process(delta: float) -> void:
 			
 			touch_press(
 					0,
-					get_lowest_index_available_for_touch(prev_touch), 
+					i, 
 					prev_touch_pos.x,
 					prev_touch_pos.y,
 					false,
@@ -50,7 +66,7 @@ func _process(delta: float) -> void:
 			
 			touch_drag(
 					0,
-					get_lowest_index_available_for_touch(touch),
+					i,
 					prev_touch_pos.x,
 					prev_touch_pos.y,
 					touch_pos.x,
@@ -58,25 +74,23 @@ func _process(delta: float) -> void:
 					touch.pressure,
 					touch.axis)
 	
-	prev_touches_cache = TrackpadServerAddon.touches_cache.duplicate()
+	prev_touch_events = touch_events.duplicate()
 
 func get_lowest_index_available_for_touch(touch:OMSTouchData) -> int:
-	var touches := TrackpadServerAddon.touches_cache.values()
-	touches.sort_custom(func(a,b): return a.id < b.id)
-	
-	var prev_touch_id : int = 0
-	for i in range(0,touches.size()):
-		var touch_id : int = touches[i].id
+	# First see if the touch exists
+	for i in range(0,max_touches):
+		if prev_touch_events[i] == null:
+			continue
 		
-		if touch_id - prev_touch_id > 1:
-			var lowest_available_index := prev_touch_id + 1
-			return lowest_available_index
-		
-		prev_touch_id = touch_id
+		if prev_touch_events[i].id == touch.id:
+			return i
 	
-	return 0
+	# If not, get the first available slot
+	for i in range(0,max_touches):
+		if prev_touch_events[i] == null:
+			return i
 	
-	return touch.id
+	return max_touches
 
 func touch_press(window_id:int, p_idx:int, p_x:int, p_y:int, p_pressed:bool, p_double_click:bool) -> void:
 	var event := InputEventScreenTouch.new()

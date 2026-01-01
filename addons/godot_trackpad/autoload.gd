@@ -2,6 +2,8 @@
 extends Node
 
 var touches_cache : Dictionary[int,OMSTouchData] = {}
+var prev_touches_cache : Dictionary[int,OMSTouchData] = {}
+
 signal trackpad_touch(touch:OMSTouchData)
 
 const TouchscreenEmulation = preload("uid://bhwwj71jhevtg")
@@ -21,6 +23,8 @@ func _on_touch(touch:OMSTouchData):
 
 func _process(delta: float) -> void:
 	await RenderingServer.frame_post_draw
+	
+	prev_touches_cache = touches_cache
 	touches_cache.clear()
 
 func _print_touch(touch:OMSTouchData):

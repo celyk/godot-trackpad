@@ -17,6 +17,12 @@ An addon that exposes trackpad data via Apples private MultitouchSupport framewo
 - [x] Complete raw touch data
 - [ ] Emulate screen touch events
 
+# Screen touch emulation usage
+
+GodotTrackpad comes with an option to map touch events to the screen. This is to allow for development of multitouch apps/games from your laptop, which is awesome! The only caveat is it takes some hand eye coordination.
+
+To enable screen touch emulation, go into the project settings and check `godot_trackpad/input/emulate_screen_touch`
+
 # Supported platforms
 
 Currently only macOS is supported. I'm open to supporting other platforms, but I can't do it without help.

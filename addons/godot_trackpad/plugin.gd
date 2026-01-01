@@ -1,7 +1,7 @@
 @tool
 extends EditorPlugin
 
-var settings = load("settings.gd").instantiate()
+var settings = preload("uid://0sbo77w267vf").new()
 
 func _enter_tree() -> void:
 	add_autoload_singleton("TrackpadServerAddon", "autoload.gd")

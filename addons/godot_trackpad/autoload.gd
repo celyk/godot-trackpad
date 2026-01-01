@@ -4,9 +4,14 @@ extends Node
 var touches_cache : Array[OMSTouchData] = []
 signal trackpad_touch(touch:OMSTouchData)
 
+const TouchscreenEmulation = preload("uid://bhwwj71jhevtg")
+
 func _ready() -> void:
 	TrackpadServer.register_input_callback(_on_trackpad_event)
 	trackpad_touch.connect(_on_touch)
+	
+	if ProjectSettings.get_setting("godot_trackpad/input/emulate_screen_touch") == true:
+		add_child(TouchscreenEmulation.new())
 
 func _on_trackpad_event(touch:OMSTouchData):
 	trackpad_touch.emit.call_deferred(touch)

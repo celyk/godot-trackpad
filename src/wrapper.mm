@@ -3,11 +3,9 @@
 
 #import <OpenMultitouchSupportXCF/OpenMultitouchSupportXCF.h>
 
-#import "OpenMTInternal.h"
+#include "MultitouchSupportHeader.h"
 
 using namespace godot;
-
-
 
 
 // --- Interface ---
@@ -48,7 +46,7 @@ void TrackpadServer::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("get_digitizer_resolution"), &TrackpadServer::getDigitizerResolution);
 	ClassDB::bind_method(D_METHOD("get_digitizer_physical_size"), &TrackpadServer::getDigitizerPhysicalSize);
 	ClassDB::bind_method(D_METHOD("get_haptics_disabled"), &TrackpadServer::getHapticsDisabled);
-	ClassDB::bind_method(D_METHOD("set_haptics_disabled", "disabled"), &TrackpadServer::getHapticsDisabled);
+	ClassDB::bind_method(D_METHOD("set_haptics_disabled", "disabled"), &TrackpadServer::setHapticsDisabled);
 }
 
 
@@ -129,16 +127,16 @@ Error TrackpadServer::setHapticsDisabled(bool disable) {
 		return FAILED;
 	}
 
-	int result = MTActuatorSetSystemActuationsEnabled(actuator, enabled ? 1 : 0);
+	int result = MTActuatorSetSystemActuationsEnabled(actuator, disable ? 0 : 1);
 	if (result == 0) {
-		NSLog(@"Trackpad haptics successfully %@", enabled ? @"enabled" : @"disabled");
+		NSLog(@"Trackpad haptics successfully %@", disable ? @"disabled" : @"enabled");
 	} else {
 		NSLog(@"Failed to toggle trackpad haptics. Error code: %d", result);
 	}
 
 	haptics_disabled = disable;
 
-	return OK
+	return OK;
 }
 
 void OMSTouchData::_bind_methods() {

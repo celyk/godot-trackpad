@@ -15,7 +15,8 @@ An addon that exposes trackpad data via Apples private MultitouchSupport framewo
 
 - [x] Query trackpad dimensions
 - [x] Complete raw touch data
-- [ ] Emulate screen touch events
+- [x] Emulate screen touch events
+- [x] Disable haptics
 
 # Screen touch emulation usage
 

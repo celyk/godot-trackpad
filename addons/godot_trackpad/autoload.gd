@@ -1,7 +1,7 @@
 @tool
 extends Node
 
-var touches_cache : Array[OMSTouchData] = []
+var touches_cache : Dictionary[int,OMSTouchData] = {}
 signal trackpad_touch(touch:OMSTouchData)
 
 const TouchscreenEmulation = preload("uid://bhwwj71jhevtg")
@@ -17,7 +17,7 @@ func _on_trackpad_event(touch:OMSTouchData):
 	trackpad_touch.emit.call_deferred(touch)
 
 func _on_touch(touch:OMSTouchData):
-	touches_cache.append(touch)
+	touches_cache[touch.id] = touch
 
 func _process(delta: float) -> void:
 	await RenderingServer.frame_post_draw

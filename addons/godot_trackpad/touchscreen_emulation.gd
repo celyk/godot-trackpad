@@ -5,28 +5,18 @@ func _ready() -> void:
 	if Engine.is_editor_hint():
 		set_process(false)
 
-var prev_touches_cache : Array[OMSTouchData]
+var prev_touches_cache : Dictionary[int,OMSTouchData] = {}
 func _process(delta: float) -> void:
 	#for touch:OMSTouchData in TrackpadServerAddon.touches_cache:
-	for i:int in range(0,TrackpadServerAddon.touches_cache.size()):
-		var touch := TrackpadServerAddon.touches_cache[i]
-		var prev_touch : OMSTouchData = null
+	for i:int in range(0,10):
+		var prev_touch : OMSTouchData = prev_touches_cache.get(i)
+		var touch := TrackpadServerAddon.touches_cache.get(i)
 		
-		#var prev_touch_idx := func(e): return e.id == i
-		#if prev_touches_cache.find_custom()
-		
-		for j:int in range(0,prev_touches_cache.size()):
-			if prev_touches_cache[j].id == touch.id:
-				prev_touch = prev_touches_cache[j]
-				break
-		
-		var touch_pos : Vector2 = Vector2(touch.position)
-		touch_pos.y = 1.0 - touch_pos.y
-		touch_pos = touch_pos * Vector2(get_viewport().size)
-		
-		#print(touch_pos)
-		
-		if prev_touch == null:
+		if prev_touch == null and touch:
+			var touch_pos : Vector2 = Vector2(touch.position)
+			touch_pos.y = 1.0 - touch_pos.y
+			touch_pos = touch_pos * Vector2(get_viewport().size)
+			
 			touch_press(
 					0,
 					touch.id, 
@@ -34,7 +24,25 @@ func _process(delta: float) -> void:
 					touch_pos.y,
 					true,
 					false)
-		else:
+		
+		if prev_touch and touch == null:
+			var prev_touch_pos : Vector2 = prev_touch.position
+			prev_touch_pos.y = 1.0 - prev_touch_pos.y
+			prev_touch_pos = prev_touch_pos * Vector2(get_viewport().size)
+			
+			touch_press(
+					0,
+					prev_touch.id, 
+					prev_touch_pos.x,
+					prev_touch_pos.y,
+					false,
+					false)
+		
+		if prev_touch and touch:
+			var touch_pos : Vector2 = Vector2(touch.position)
+			touch_pos.y = 1.0 - touch_pos.y
+			touch_pos = touch_pos * Vector2(get_viewport().size)
+			
 			var prev_touch_pos : Vector2 = prev_touch.position
 			prev_touch_pos.y = 1.0 - prev_touch_pos.y
 			prev_touch_pos = prev_touch_pos * Vector2(get_viewport().size)

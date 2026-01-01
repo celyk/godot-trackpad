@@ -33,7 +33,7 @@ func _process(delta: float) -> void:
 func _draw() -> void:
 	#draw_primitive()
 	
-	for touch in TrackpadServerAddon.touches_cache:
-		var normalize_pos := touch.position
+	for touch in TrackpadServerAddon.touches_cache.values():
+		var normalize_pos : Vector2 = touch.position
 		normalize_pos.y = 1.0 - normalize_pos.y
 		draw_circle(normalize_pos * size, (2 + touch.pressure / 40)*4, Color.BLUE)

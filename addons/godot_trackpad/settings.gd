@@ -11,6 +11,13 @@ func _initialize() -> void:
 			PROPERTY_HINT_NONE,
 			"",
 			false)
+	
+	_define_project_setting(
+		"godot_trackpad/input/display_screen_touches", 
+		TYPE_BOOL, 
+		PROPERTY_HINT_NONE,
+		"",
+		false)
 
 func _define_project_setting(
 		p_name : String,

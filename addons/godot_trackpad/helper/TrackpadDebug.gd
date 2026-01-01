@@ -3,6 +3,8 @@ class_name TrackpadDebug extends Control
 
 var draw_rect := ColorRect.new()
 func _ready() -> void:
+	custom_minimum_size = Vector2(128,128)
+	
 	add_child(draw_rect)
 	draw_rect.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	draw_rect.z_index = -1

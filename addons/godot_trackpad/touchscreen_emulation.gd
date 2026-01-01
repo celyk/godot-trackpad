@@ -1,14 +1,15 @@
 @tool
 extends Node
 
+const max_touches := 10
+
 func _ready() -> void:
 	if Engine.is_editor_hint():
 		set_process(false)
 
 var prev_touches_cache : Dictionary[int,OMSTouchData] = {}
 func _process(delta: float) -> void:
-	#for touch:OMSTouchData in TrackpadServerAddon.touches_cache:
-	for i:int in range(0,10):
+	for i:int in range(0,max_touches):
 		var prev_touch : OMSTouchData = prev_touches_cache.get(i)
 		var touch := TrackpadServerAddon.touches_cache.get(i)
 		
@@ -19,7 +20,7 @@ func _process(delta: float) -> void:
 			
 			touch_press(
 					0,
-					touch.id, 
+					get_lowest_index_available_for_touch(touch), 
 					touch_pos.x,
 					touch_pos.y,
 					true,
@@ -32,7 +33,7 @@ func _process(delta: float) -> void:
 			
 			touch_press(
 					0,
-					prev_touch.id, 
+					get_lowest_index_available_for_touch(prev_touch), 
 					prev_touch_pos.x,
 					prev_touch_pos.y,
 					false,
@@ -49,7 +50,7 @@ func _process(delta: float) -> void:
 			
 			touch_drag(
 					0,
-					touch.id,
+					get_lowest_index_available_for_touch(touch),
 					prev_touch_pos.x,
 					prev_touch_pos.y,
 					touch_pos.x,
@@ -58,6 +59,24 @@ func _process(delta: float) -> void:
 					touch.axis)
 	
 	prev_touches_cache = TrackpadServerAddon.touches_cache.duplicate()
+
+func get_lowest_index_available_for_touch(touch:OMSTouchData) -> int:
+	var touches := TrackpadServerAddon.touches_cache.values()
+	touches.sort_custom(func(a,b): return a.id < b.id)
+	
+	var prev_touch_id : int = 0
+	for i in range(0,touches.size()):
+		var touch_id : int = touches[i].id
+		
+		if touch_id - prev_touch_id > 1:
+			var lowest_available_index := prev_touch_id + 1
+			return lowest_available_index
+		
+		prev_touch_id = touch_id
+	
+	return 0
+	
+	return touch.id
 
 func touch_press(window_id:int, p_idx:int, p_x:int, p_y:int, p_pressed:bool, p_double_click:bool) -> void:
 	var event := InputEventScreenTouch.new()

@@ -47,6 +47,8 @@ void TrackpadServer::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("register_input_callback", "callback"), &TrackpadServer::registerInputCallback);
 	ClassDB::bind_method(D_METHOD("get_digitizer_resolution"), &TrackpadServer::getDigitizerResolution);
 	ClassDB::bind_method(D_METHOD("get_digitizer_physical_size"), &TrackpadServer::getDigitizerPhysicalSize);
+	ClassDB::bind_method(D_METHOD("get_haptics_disabled"), &TrackpadServer::getHapticsDisabled);
+	ClassDB::bind_method(D_METHOD("set_haptics_disabled", "disabled"), &TrackpadServer::getHapticsDisabled);
 }
 
 
@@ -108,6 +110,35 @@ Vector2i TrackpadServer::getDigitizerPhysicalSize() {
 	}
 
 	return Vector2i(0, 0);
+}
+
+bool TrackpadServer::getHapticsDisabled() {
+	return haptics_disabled;
+}
+
+Error TrackpadServer::setHapticsDisabled(bool disable) {
+	OpenMTManager* manager = OpenMTManager.sharedManager;
+	MTDeviceRef device = MTDeviceCreateDefault();
+	
+	if (device == NULL){
+		return FAILED;
+	}
+
+	void* actuator = MTDeviceGetMTActuator(device);
+    if (actuator == nullptr) {
+		return FAILED;
+	}
+
+	int result = MTActuatorSetSystemActuationsEnabled(actuator, enabled ? 1 : 0);
+	if (result == 0) {
+		NSLog(@"Trackpad haptics successfully %@", enabled ? @"enabled" : @"disabled");
+	} else {
+		NSLog(@"Failed to toggle trackpad haptics. Error code: %d", result);
+	}
+
+	haptics_disabled = disable;
+
+	return OK
 }
 
 void OMSTouchData::_bind_methods() {

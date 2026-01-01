@@ -98,6 +98,8 @@ private:
 
     Callable touch_callback;
 
+    bool haptics_disabled = false;
+
 protected:
 	static void _bind_methods();
 
@@ -109,6 +111,8 @@ public:
     void registerInputCallback(Callable callback);
     Vector2i getDigitizerResolution();
     Vector2i getDigitizerPhysicalSize();
+    bool getHapticsDisabled();
+    Error setHapticsDisabled(bool disable);
 };
 
 

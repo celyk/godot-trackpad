@@ -24,10 +24,13 @@ using namespace godot;
 
 void register_types() {
     GDREGISTER_CLASS(TrackpadTouch);
-    GDREGISTER_ABSTRACT_CLASS(TrackpadServer);
+	GDREGISTER_ABSTRACT_CLASS(TrackpadServer);
 
 #if defined(MACOS_ENABLED)
-	TrackpadServer* trackpad_singleton = static_cast<TrackpadServer*>(memnew(TrackpadServerMacOS));
+    //GDREGISTER_CLASS(TrackpadServerMacOS);
+    GDREGISTER_INTERNAL_CLASS(TrackpadServerMacOS);
+	//TrackpadServer* trackpad_singleton = static_cast<TrackpadServer*>(memnew(TrackpadServerMacOS));
+	TrackpadServer* trackpad_singleton = memnew(TrackpadServerMacOS);
 #endif
 
 #if defined(LINUX_ENABLED)

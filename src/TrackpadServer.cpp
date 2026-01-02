@@ -11,3 +11,11 @@ void TrackpadServer::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("get_haptics_disabled"), &TrackpadServer::getHapticsDisabled);
 	ClassDB::bind_method(D_METHOD("set_haptics_disabled", "disabled"), &TrackpadServer::setHapticsDisabled);
 }
+
+godot::TrackpadServer::TrackpadServer()
+{
+}
+
+godot::TrackpadServer::~TrackpadServer()
+{
+}

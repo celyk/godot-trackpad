@@ -51,10 +51,16 @@ if env["platform"] in ["macos"]:
 
     # Build Objective-C GDExtension
     source_directories = ["."]
+
+    # Add platform-specific folders based on the current build platform
+    if env["platform"] == "macos":
+        source_directories.append("platform/macos")
+    
     sources = [
         Glob("{}/{}/*.cpp".format(build_dir, directory)) + Glob("{}/{}/*.mm".format(build_dir, directory))
         for directory in source_directories
     ]
+
     library = env.SharedLibrary(
         "addons/godot_trackpad/build/libobjcgdextension{}{}".format(env["suffix"], env["SHLIBSUFFIX"]),
         source=sources,

@@ -5,8 +5,8 @@
 #include <godot_cpp/core/mutex_lock.hpp>
 #include <godot_cpp/classes/ref.hpp>
 
-//#include "TrackpadTouch.h"
-class TrackpadTouch;
+#include "TrackpadTouch.h"
+//class TrackpadTouch;
 
 namespace godot{
 
@@ -23,8 +23,8 @@ protected:
 	static void _bind_methods();
 
 public:
-    //virtual TrackpadServer();
-    //virtual ~TrackpadServer();
+    TrackpadServer(){}
+    //virtual ~TrackpadServer() = 0;
 
     virtual void handle_touch_event(Ref<TrackpadTouch> event) = 0;
     virtual void registerInputCallback(Callable callback) = 0;

@@ -15,20 +15,6 @@ class MyObjCClass;
 
 namespace godot{
 
-/*
-enum OMSState: String, Sendable {
-    case notTouching
-    case starting
-    case hovering
-    case making
-    case touching
-    case breaking
-    case lingering
-    case leaving
-}
-*/
-
-
 class OMSTouchData : public RefCounted {
 	GDCLASS(OMSTouchData, RefCounted);
 
@@ -105,7 +91,7 @@ protected:
 
 public:
     TrackpadServer();
-    ~TrackpadServer(){}
+    ~TrackpadServer();
 
     void handle_touch_event(Ref<OMSTouchData> event);
     void registerInputCallback(Callable callback);

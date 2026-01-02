@@ -12,6 +12,7 @@ using namespace godot;
 @interface MyObjCClass : NSObject {
 @public
 	TrackpadServer* cppInstance; // Pointer to the C++ class
+	MTDeviceRef device;
 }
 - (void)handleMultitouchEvent:(OpenMTEvent *)event;
 @end
@@ -61,11 +62,26 @@ void TrackpadServer::handle_touch_event(Ref<OMSTouchData> event) {
 TrackpadServer::TrackpadServer() {
 	objc_wrapper = [[MyObjCClass alloc] init];
     objc_wrapper->cppInstance = this; // OR: [objc_wrapper setCppInstance:this];
+	
+	if (MTDeviceIsAvailable()) {
+		MTDeviceRef device = MTDeviceCreateDefault(); //manager.device;
+		objc_wrapper->device = device;
+	}
 
-	OpenMTManager* manager = OpenMTManager.sharedManager;
 
     // The manager starts working as soon as you add a listener
+	OpenMTManager* manager = OpenMTManager.sharedManager;
     [manager addListenerWithTarget:objc_wrapper selector:@selector(handleMultitouchEvent:)];
+}
+
+TrackpadServer::~TrackpadServer() {
+	MTDeviceRef device = objc_wrapper->device;
+	
+	// We're responsible for releasing the device handle.
+	CFRelease(device);
+
+	[objc_wrapper release];
+	objc_wrapper = nil;
 }
 
 void TrackpadServer::registerInputCallback(Callable callback) {
@@ -73,41 +89,42 @@ void TrackpadServer::registerInputCallback(Callable callback) {
 }
 
 Vector2i TrackpadServer::getDigitizerResolution() {
-	if (MTDeviceIsAvailable()) {
-		OpenMTManager* manager = OpenMTManager.sharedManager;
-		MTDeviceRef device = MTDeviceCreateDefault(); //manager.device;
-		int rows, cols;
-		OSStatus err = MTDeviceGetSensorDimensions(device, &rows, &cols);
-
-		if (err != noErr) {
-			NSLog(@"ERROR Dimensions: %d x %d ", cols, rows);
-			return Vector2i(0, 0);
-		}
-
-		// Cols should come first because it gives how many lines in the x axis.
-		return Vector2i(cols, rows);
+	MTDeviceRef device = objc_wrapper->device;
+	
+	if (!device){
+		return Vector2i(0, 0);
 	}
 
-	return Vector2i(0, 0);
+	int rows, cols;
+	OSStatus err = MTDeviceGetSensorDimensions(device, &rows, &cols);
+
+	if (err != noErr) {
+		NSLog(@"ERROR Dimensions: %d x %d ", cols, rows);
+		return Vector2i(0, 0);
+	}
+
+	// Cols should come first because it gives how many lines along the x axis.
+	return Vector2i(cols, rows);
+
 }
 
 // width and height are returned in hundreds of mm
 Vector2i TrackpadServer::getDigitizerPhysicalSize() {
-	if (MTDeviceIsAvailable()) {
-		OpenMTManager* manager = OpenMTManager.sharedManager;
-		MTDeviceRef device = MTDeviceCreateDefault(); //manager.device;
-		int width, height;
-		OSStatus err = MTDeviceGetSensorSurfaceDimensions(device, &width, &height);
-
-		if (err != noErr) {
-			NSLog(@"ERROR Surface Dimensions: %d x %d ", width, height);
-			return Vector2i(0, 0);
-		}
-
-		return Vector2i(width, height);
+	MTDeviceRef device = objc_wrapper->device;
+	
+	if (!device){
+		return Vector2i(0, 0);
 	}
 
-	return Vector2i(0, 0);
+	int width, height;
+	OSStatus err = MTDeviceGetSensorSurfaceDimensions(device, &width, &height);
+
+	if (err != noErr) {
+		NSLog(@"ERROR Surface Dimensions: %d x %d ", width, height);
+		return Vector2i(0, 0);
+	}
+
+	return Vector2i(width, height);
 }
 
 bool TrackpadServer::getHapticsDisabled() {
@@ -115,10 +132,9 @@ bool TrackpadServer::getHapticsDisabled() {
 }
 
 Error TrackpadServer::setHapticsDisabled(bool disable) {
-	OpenMTManager* manager = OpenMTManager.sharedManager;
-	MTDeviceRef device = MTDeviceCreateDefault();
+	MTDeviceRef device = objc_wrapper->device;
 	
-	if (device == NULL){
+	if (!device){
 		return FAILED;
 	}
 

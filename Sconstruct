@@ -17,7 +17,7 @@ def link_framework(framework_path, framework_name, header_path=""):
     # Add the header path to the Objective-C++ compiler
     env.Append(CXXFLAGS=["-F" + header_path])
 
-if env["platform"] in ["macos"]:
+if env["platform"] == "macos":
     # Compile flags
     env.Append(LINKFLAGS="-framework Foundation")
 
@@ -36,40 +36,38 @@ if env["platform"] in ["macos"]:
     # If you put it in a subfolder like Contents/Frameworks in the app bundle:
     env.Append(LINKFLAGS=["-Wl,-rpath,@loader_path"])
 
-    # Compile with debugging symbols
-    if ARGUMENTS.get("debugging_symbols") == 'true':
-        if "-O2" in env["CCFLAGS"]:
-            env["CCFLAGS"].remove("-O2")
-        env.Append(CCFLAGS=["-g", "-O0"])
+# Compile with debugging symbols
+if ARGUMENTS.get("debugging_symbols") == 'true':
+    if "-O2" in env["CCFLAGS"]:
+        env["CCFLAGS"].remove("-O2")
+    env.Append(CCFLAGS=["-g", "-O0"])
 
-    # Setup variant build dir for each setup
-    def remove_prefix(s, prefix):
-        return s[len(prefix):] if s.startswith(prefix) else s
+# Setup variant build dir for each setup
+def remove_prefix(s, prefix):
+    return s[len(prefix):] if s.startswith(prefix) else s
 
-    build_dir = "build/{}".format(remove_prefix(env["suffix"], "."))
-    VariantDir(build_dir, 'src', duplicate=False)
+build_dir = "build/{}".format(remove_prefix(env["suffix"], "."))
+VariantDir(build_dir, 'src', duplicate=False)
 
-    # Build Objective-C GDExtension
-    source_directories = ["."]
+# Build Objective-C GDExtension
+source_directories = ["."]
 
-    # Add platform-specific folders based on the current build platform
-    if env["platform"] == "macos":
-        source_directories.append("platform/macos")
-    
-    sources = [
-        Glob("{}/{}/*.cpp".format(build_dir, directory)) + Glob("{}/{}/*.mm".format(build_dir, directory))
-        for directory in source_directories
-    ]
+# Add platform-specific folders based on the current build platform
+if env["platform"] == "macos":
+    source_directories.append("platform/macos")
 
-    library = env.SharedLibrary(
-        "addons/godot_trackpad/build/libobjcgdextension{}{}".format(env["suffix"], env["SHLIBSUFFIX"]),
-        source=sources,
-        #LIBS=["OpenMultitouchSupport"],
-        #LIBPATH=["OpenMultitouchSupport/Framework/build/Build/Products/Release/"],
-    )
+sources = [
+    Glob("{}/{}/*.cpp".format(build_dir, directory)) + Glob("{}/{}/*.mm".format(build_dir, directory))
+    for directory in source_directories
+]
 
-    # Copy the framework to the addon.
-    install_list = env.Install("./addons/godot_trackpad/build", os.path.join(framework_container, "OpenMultitouchSupportXCF.framework"))
-    Default(install_list)
+library = env.SharedLibrary(
+    "addons/godot_trackpad/build/libobjcgdextension{}{}".format(env["suffix"], env["SHLIBSUFFIX"]),
+    source=sources,
+)
+
+# Copy the framework to the addon.
+install_list = env.Install("./addons/godot_trackpad/build", os.path.join(framework_container, "OpenMultitouchSupportXCF.framework"))
+Default(install_list)
 
 Default(library)

@@ -1,10 +1,10 @@
 @tool
 extends Node
 
-var touches_cache : Dictionary[int,OMSTouchData] = {}
-var prev_touches_cache : Dictionary[int,OMSTouchData] = {}
+var touches_cache : Dictionary[int,TrackpadTouch] = {}
+var prev_touches_cache : Dictionary[int,TrackpadTouch] = {}
 
-signal trackpad_touch(touch:OMSTouchData)
+signal trackpad_touch(touch:TrackpadTouch)
 
 const TouchscreenEmulation = preload("uid://bhwwj71jhevtg")
 
@@ -15,10 +15,10 @@ func _ready() -> void:
 	if ProjectSettings.get_setting("godot_trackpad/input/emulate_screen_touch") == true:
 		add_child(TouchscreenEmulation.new())
 
-func _on_trackpad_event(touch:OMSTouchData):
+func _on_trackpad_event(touch:TrackpadTouch):
 	trackpad_touch.emit.call_deferred(touch)
 
-func _on_touch(touch:OMSTouchData):
+func _on_touch(touch:TrackpadTouch):
 	touches_cache[touch.id] = touch
 
 func _process(delta: float) -> void:
@@ -27,5 +27,5 @@ func _process(delta: float) -> void:
 	prev_touches_cache = touches_cache
 	touches_cache.clear()
 
-func _print_touch(touch:OMSTouchData):
+func _print_touch(touch:TrackpadTouch):
 	print(var_to_str(touch))

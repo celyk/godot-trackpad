@@ -3,8 +3,8 @@ extends Node
 
 const max_touches := 10
 
-var prev_touch_events : Array[OMSTouchData] = []
-var touch_events : Array[OMSTouchData] = []
+var prev_touch_events : Array[TrackpadTouch] = []
+var touch_events : Array[TrackpadTouch] = []
 
 func _ready() -> void:
 	if Engine.is_editor_hint():
@@ -17,7 +17,7 @@ func _ready() -> void:
 func _process(delta: float) -> void:
 	touch_events.fill(null)
 	
-	for touch:OMSTouchData in TrackpadServerAddon.touches_cache.values():
+	for touch:TrackpadTouch in TrackpadServerAddon.touches_cache.values():
 		var id := get_lowest_index_available_for_touch(touch)
 		
 		if id < max_touches:
@@ -26,8 +26,8 @@ func _process(delta: float) -> void:
 	#print(touch_events.map(func(e): return str(e.id)+"   " if e else null))
 	
 	for i:int in range(0,max_touches):
-		var prev_touch : OMSTouchData = prev_touch_events[i]
-		var touch : OMSTouchData = touch_events[i]
+		var prev_touch : TrackpadTouch = prev_touch_events[i]
+		var touch : TrackpadTouch = touch_events[i]
 		
 		if prev_touch == null and touch:
 			var touch_pos : Vector2 = Vector2(touch.position)
@@ -76,7 +76,7 @@ func _process(delta: float) -> void:
 	
 	prev_touch_events = touch_events.duplicate()
 
-func get_lowest_index_available_for_touch(touch:OMSTouchData) -> int:
+func get_lowest_index_available_for_touch(touch:TrackpadTouch) -> int:
 	# First see if the touch exists
 	for i in range(0,max_touches):
 		if prev_touch_events[i] == null:

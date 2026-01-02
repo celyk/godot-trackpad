@@ -1,25 +1,17 @@
-#ifndef TRACKPAD_WRAPPER_H
-#define TRACKPAD_WRAPPER_H
+#pragma once
 
 //#include <godot_cpp/core/version.hpp>
 #include <godot_cpp/core/class_db.hpp>
 #include <godot_cpp/core/mutex_lock.hpp>
 #include <godot_cpp/classes/ref.hpp>
 
-// Forward declaration of the Objective-C class
-#ifdef __OBJC__
-@class MyObjCClass;
-#else
-class MyObjCClass;
-#endif
-
 namespace godot{
 
-class OMSTouchData : public RefCounted {
-	GDCLASS(OMSTouchData, RefCounted);
+class TrackpadTouch : public RefCounted {
+	GDCLASS(TrackpadTouch, RefCounted);
 
 public:
-	enum OMSState {
+	enum TouchState {
         notTouching,
         starting,
         hovering,
@@ -38,7 +30,7 @@ private:
     Vector2 axis;
     float angle; // finger angle
     float density; // area density of capacitance
-    OMSState state; //: OMSState
+    TouchState state;
     double timestamp;
 
 protected:
@@ -66,44 +58,13 @@ public:
     float get_density() const;
     void set_density(float p_density);
 
-    OMSState get_state() const;
-    void set_state(OMSState p_state);
+    TouchState get_state() const;
+    void set_state(TouchState p_state);
 
     double get_timestamp() const;
     void set_timestamp(double p_timestamp);
 };
 
-
-class TrackpadServer : public Object {
-	GDCLASS(TrackpadServer, Object);
-    //_THREAD_SAFE_CLASS_
-
-private:
-    MyObjCClass* objc_wrapper;
-    //friend class MyObjCClass;
-
-    Callable touch_callback;
-
-    bool haptics_disabled = false;
-
-protected:
-	static void _bind_methods();
-
-public:
-    TrackpadServer();
-    ~TrackpadServer();
-
-    void handle_touch_event(Ref<OMSTouchData> event);
-    void registerInputCallback(Callable callback);
-    Vector2i getDigitizerResolution();
-    Vector2i getDigitizerPhysicalSize();
-    bool getHapticsDisabled();
-    Error setHapticsDisabled(bool disable);
-};
-
-
 }
 
-VARIANT_ENUM_CAST(godot::OMSTouchData::OMSState);
-
-#endif /* !TRACKPAD_WRAPPER_H */
+VARIANT_ENUM_CAST(godot::TrackpadTouch::TouchState);

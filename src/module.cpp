@@ -27,17 +27,17 @@ void register_types() {
 	GDREGISTER_ABSTRACT_CLASS(TrackpadServer);
 
 #if defined(MACOS_ENABLED)
-    //GDREGISTER_CLASS(TrackpadServerMacOS);
     GDREGISTER_INTERNAL_CLASS(TrackpadServerMacOS);
-	//TrackpadServer* trackpad_singleton = static_cast<TrackpadServer*>(memnew(TrackpadServerMacOS));
 	TrackpadServer* trackpad_singleton = memnew(TrackpadServerMacOS);
 #endif
 
 #if defined(LINUX_ENABLED)
+    GDREGISTER_INTERNAL_CLASS(TrackpadServerLinux);
 	TrackpadServer* trackpad_singleton = memnew(TrackpadServerLinux);
 #endif
 
 #if defined(WINDOWS_ENABLED)
+    GDREGISTER_INTERNAL_CLASS(TrackpadServerWindows);
 	TrackpadServer* trackpad_singleton = memnew(TrackpadServerWindows);
 #endif
 

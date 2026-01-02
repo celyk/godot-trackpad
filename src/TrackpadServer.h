@@ -6,7 +6,6 @@
 #include <godot_cpp/classes/ref.hpp>
 
 #include "TrackpadTouch.h"
-//class TrackpadTouch;
 
 namespace godot{
 
@@ -23,9 +22,8 @@ protected:
 	static void _bind_methods();
 
 public:
-    TrackpadServer();//{}
-    //~TrackpadServer(){}
-    virtual ~TrackpadServer();// {}
+    TrackpadServer();
+    virtual ~TrackpadServer();
 
     virtual void handle_touch_event(Ref<TrackpadTouch> event) { }
     virtual void registerInputCallback(Callable callback) { }

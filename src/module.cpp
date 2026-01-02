@@ -9,9 +9,9 @@
 #include "TrackpadServer.h"
 
 // Platform dependent headers
-//#if defined(MACOS_ENABLED)
+#if defined(MACOS_ENABLED)
 #include "platform/macos/TrackpadServerMacOS.h"
-//#endif
+#endif
 
 #if defined(LINUX_ENABLED)
 #endif
@@ -26,9 +26,9 @@ void register_types() {
     GDREGISTER_CLASS(TrackpadTouch);
     GDREGISTER_ABSTRACT_CLASS(TrackpadServer);
 
-//#if defined(MACOS_ENABLED)
+#if defined(MACOS_ENABLED)
 	TrackpadServer* trackpad_singleton = static_cast<TrackpadServer*>(memnew(TrackpadServerMacOS));
-//#endif
+#endif
 
 #if defined(LINUX_ENABLED)
 	TrackpadServer* trackpad_singleton = memnew(TrackpadServerLinux);
@@ -38,7 +38,7 @@ void register_types() {
 	TrackpadServer* trackpad_singleton = memnew(TrackpadServerWindows);
 #endif
 
-	//Engine::get_singleton()->register_singleton("TrackpadServer", trackpad_singleton);
+	Engine::get_singleton()->register_singleton("TrackpadServer", trackpad_singleton);
 }
 
 void unregister_types() {

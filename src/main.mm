@@ -28,8 +28,6 @@
 
 #include <gdextension_interface.h>
 
-//#import <OpenMultitouchSupportXCF/OpenMultitouchSupportXCF.h>
-
 using namespace godot;
 
 static void initialize(ModuleInitializationLevel level) {

@@ -4,7 +4,7 @@
 
 #import <OpenMultitouchSupportXCF/OpenMultitouchSupportXCF.h>
 
-#include "platform/macos/MultitouchSupportHeader.h"
+#include "MultitouchSupportHeader.h"
 
 using namespace godot;
 
@@ -43,16 +43,7 @@ using namespace godot;
 @end
 
 
-void TrackpadServerMacOS::_bind_methods() {
-	ClassDB::bind_method(D_METHOD("register_input_callback", "callback"), &TrackpadServerMacOS::registerInputCallback);
-	ClassDB::bind_method(D_METHOD("get_digitizer_resolution"), &TrackpadServerMacOS::getDigitizerResolution);
-	ClassDB::bind_method(D_METHOD("get_digitizer_physical_size"), &TrackpadServerMacOS::getDigitizerPhysicalSize);
-	ClassDB::bind_method(D_METHOD("get_haptics_disabled"), &TrackpadServerMacOS::getHapticsDisabled);
-	ClassDB::bind_method(D_METHOD("set_haptics_disabled", "disabled"), &TrackpadServerMacOS::setHapticsDisabled);
-}
-
-
-void TrackpadServerMacOS::handle_touch_event(Ref<OMSTouchData> event) {
+void TrackpadServerMacOS::handle_touch_event(Ref<TrackpadTouch> event) {
 	if(touch_callback.is_null()) {
 		return;
 	}

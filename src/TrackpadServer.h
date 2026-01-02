@@ -23,15 +23,15 @@ protected:
 	static void _bind_methods();
 
 public:
-    TrackpadServer(){}
+    //TrackpadServer(){}
     //virtual ~TrackpadServer() = 0;
 
     virtual void handle_touch_event(Ref<TrackpadTouch> event) = 0;
     virtual void registerInputCallback(Callable callback) = 0;
     virtual Vector2i getDigitizerResolution() = 0;
-    virtual Vector2i getDigitizerPhysicalSize();
-    virtual bool getHapticsDisabled();
-    virtual Error setHapticsDisabled(bool disable);
+    virtual Vector2i getDigitizerPhysicalSize() { return Vector2i(); }
+    virtual bool getHapticsDisabled() { return true; }
+    virtual Error setHapticsDisabled(bool disable) { return FAILED; }
 };
 
 

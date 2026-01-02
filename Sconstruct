@@ -66,8 +66,10 @@ library = env.SharedLibrary(
     source=sources,
 )
 
-# Copy the framework to the addon.
-install_list = env.Install("./addons/godot_trackpad/build", os.path.join(framework_container, "OpenMultitouchSupportXCF.framework"))
-Default(install_list)
+if env["platform"] == "macos":
+    # Copy the framework to the addon.
+    install_list = env.Install("./addons/godot_trackpad/build", os.path.join(framework_container, "OpenMultitouchSupportXCF.framework"))
+    Default(install_list)
+
 
 Default(library)

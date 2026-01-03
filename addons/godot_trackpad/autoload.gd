@@ -9,6 +9,8 @@ var prev_touches_cache : Array[TrackpadTouch] = []
 signal trackpad_touch(touch:TrackpadTouch)
 
 const TouchscreenEmulation = preload("uid://bhwwj71jhevtg")
+const TouchscreenEmulationDebugDraw = preload("uid://b1jy66mvled8i")
+
 var touchscreen_emulation_callback : Callable
 
 func _ready() -> void:
@@ -18,13 +20,14 @@ func _ready() -> void:
 	trackpad_touch.connect(_on_touch)
 	
 	if ProjectSettings.get_setting("godot_trackpad/input/emulate_screen_touch") == true:
-		add_child(TouchscreenEmulation.new())
+		var touchscreen_emulation = TouchscreenEmulation.new()
+		add_child(touchscreen_emulation)
+		
+		if ProjectSettings.get_setting("godot_trackpad/input/display_screen_touches") == true:
+			var touchscreen_emulation_draw = TouchscreenEmulationDebugDraw.new()
+			add_child(touchscreen_emulation_draw)
 
 func _on_trackpad_event(touch:TrackpadTouch):
-	if touch.state != 4 and not Engine.is_editor_hint():
-		#print("Touch state: ", touch.state)
-		pass
-	
 	if touchscreen_emulation_callback:
 		touchscreen_emulation_callback.call_deferred(0, touch)
 	

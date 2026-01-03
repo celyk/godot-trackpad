@@ -18,9 +18,8 @@ var sorted_touches : Array[TrackpadTouch]
 func _process(delta: float) -> void:
 	#return
 	
-	_update_touch_events()
-	
 	sorted_touches = _get_sorted_touches()
+	print(sorted_touches)
 	#print(sorted_touches)
 	
 	var window_id := 0
@@ -72,12 +71,15 @@ func _process(delta: float) -> void:
 	for id:int in range(0,sorted_touches.size()):
 		if sorted_touches[id] != null:
 			prev_touch_map[id] = sorted_touches[id]
+	
+	#_update_touch_events()
+	
 
 func _is_in_touch_map(touch:TrackpadTouch) -> bool:
 	return touch.id in touch_map.values().map(func(e:TrackpadTouch): return e.id)
 
 func _find_touch_id(touch:TrackpadTouch) -> int:
-	#touch_map.sort()
+	touch_map.sort()
 	var foo := func(e:TrackpadTouch, id:int): return e.id == id
 	return touch_map.values().find_custom(foo.bind(touch.id))
 
@@ -101,11 +103,39 @@ func get_lowest_index_available_for_touch(touch:TrackpadTouch) -> int:
 	
 	return -1
 
+func _initial_touch_insert(touch:TrackpadTouch) -> void:
+	var id := 0
+	
+	touch_map.sort()
+	var sorted_keys := touch_map.keys()
+	
+	if not sorted_keys.is_empty():
+		for i in range(0, sorted_keys.back()+2):
+			if not (i in sorted_keys):
+				id = i
+				break
+	
+	touch_map[id] = touch
+
+func _update_touch(touch:TrackpadTouch) -> void:
+	var id := _find_touch_id(touch)
+	
+	touch_map[id] = touch
+
+func _final_touch_remove(touch:TrackpadTouch) -> void:
+	var id := _find_touch_id(touch)
+	touch_map.erase(id)
+
 func _update_touch_events() -> void:
 	for touch:TrackpadTouch in TrackpadServerAddon.touches_cache:
-		var id := get_lowest_index_available_for_touch(touch)
+		if touch.state == TrackpadTouch.starting:
+			_initial_touch_insert(touch)
 		
-		touch_map[id] = touch
+		if touch.state == TrackpadTouch.touching:
+			_update_touch(touch)
+		
+		if touch.state == TrackpadTouch.leaving:
+			_final_touch_remove(touch)
 
 func _normalized_pos_to_screen(p:Vector2) -> Vector2:
 	p.y = 1.0 - p.y

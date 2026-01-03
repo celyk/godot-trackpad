@@ -9,7 +9,7 @@ signal trackpad_touch(touch:TrackpadTouch)
 const TouchscreenEmulation = preload("uid://bhwwj71jhevtg")
 
 func _ready() -> void:
-	TrackpadServer.register_input_callback(_on_trackpad_event)
+	TrackpadServer.device_register_input_callback(_on_trackpad_event)
 	trackpad_touch.connect(_on_touch)
 	
 	if ProjectSettings.get_setting("godot_trackpad/input/emulate_screen_touch") == true:

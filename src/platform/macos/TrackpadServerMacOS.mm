@@ -76,11 +76,11 @@ TrackpadServerMacOS::~TrackpadServerMacOS() {
 	objc_wrapper = nil;
 }
 
-void TrackpadServerMacOS::register_input_callback(Callable callback) {
+void TrackpadServerMacOS::device_register_input_callback(TrackpadDeviceID device_id, Callable callback) {
 	primary_touch_callback = callback;
 }
 
-Vector2i TrackpadServerMacOS::get_digitizer_resolution() {
+Vector2i TrackpadServerMacOS::device_get_digitizer_resolution(TrackpadDeviceID device_id) {
 	MTDeviceRef device = objc_wrapper->device;
 	
 	if (!device){
@@ -101,7 +101,7 @@ Vector2i TrackpadServerMacOS::get_digitizer_resolution() {
 }
 
 // width and height are returned in hundreds of mm
-Vector2i TrackpadServerMacOS::get_digitizer_physical_size() {
+Vector2i TrackpadServerMacOS::device_get_digitizer_physical_size(TrackpadDeviceID device_id) {
 	MTDeviceRef device = objc_wrapper->device;
 	
 	if (!device){
@@ -119,11 +119,11 @@ Vector2i TrackpadServerMacOS::get_digitizer_physical_size() {
 	return Vector2i(width, height);
 }
 
-bool TrackpadServerMacOS::get_haptics_disabled() {
+bool TrackpadServerMacOS::device_get_haptics_disabled(TrackpadDeviceID device_id) {
 	return haptics_disabled;
 }
 
-Error TrackpadServerMacOS::set_haptics_disabled(bool disable) {
+Error TrackpadServerMacOS::device_set_haptics_disabled(TrackpadDeviceID device_id, bool disable) {
 	MTDeviceRef device = objc_wrapper->device;
 	
 	if (!device){

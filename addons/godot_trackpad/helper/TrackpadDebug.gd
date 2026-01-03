@@ -21,10 +21,10 @@ func _process(delta: float) -> void:
 	#print("Sensor physical size: ", TrackpadServer.get_sensor_physical_size() / 100.0 / 10.0)
 	#print("Sensor aspect: ", TrackpadServer.get_sensor_size().aspect(), " ", TrackpadServer.get_sensor_physical_size().aspect())
 	
-	var sensor_size : Vector2 = TrackpadServer.get_digitizer_resolution()
-	var sensor_physical_size : Vector2 = TrackpadServer.get_digitizer_physical_size()
+	var sensor_size : Vector2 = TrackpadServer.device_get_digitizer_resolution()
+	var sensor_physical_size : Vector2 = TrackpadServer.device_get_digitizer_physical_size()
 	
-	var physical_aspect : float = TrackpadServer.get_digitizer_physical_size().aspect()
+	var physical_aspect : float = TrackpadServer.device_get_digitizer_physical_size().aspect()
 	
 	size.x = physical_aspect * size.y
 	

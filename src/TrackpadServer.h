@@ -4,6 +4,7 @@
 #include <godot_cpp/core/class_db.hpp>
 #include <godot_cpp/core/mutex_lock.hpp>
 #include <godot_cpp/classes/ref.hpp>
+#include <godot_cpp/variant/array.hpp>
 
 #include "TrackpadTouch.h"
 
@@ -26,29 +27,17 @@ public:
     TrackpadServer();
     virtual ~TrackpadServer();
 
-    //virtual void handle_touch_event(Ref<TrackpadTouch> event) { }
-    virtual void register_input_callback(Callable callback) { }
+    virtual TrackpadDeviceID get_primary_device() { return -1; }
+    virtual TypedArray<TrackpadDeviceID> get_device_list() { return TypedArray<TrackpadDeviceID>(); }
 
-    virtual Vector2i get_digitizer_resolution() { return Vector2i(); }
-    virtual Vector2i get_digitizer_physical_size() { return Vector2i(); }
+    virtual void device_register_input_callback(TrackpadDeviceID device_id, Callable callback) { }
 
+    virtual Vector2i device_get_digitizer_resolution(TrackpadDeviceID device_id) { return Vector2i(); }
+    virtual Vector2i device_get_digitizer_physical_size(TrackpadDeviceID device_id) { return Vector2i(); }
 
-    // TrackpadServer.get_primary_device() -> int
-    // TrackpadServer.get_device_list() -> Array[int]
-
-    // TrackpadServer.device_get_digitizer_resolution(device_id:int) -> Vector2i
-    // TrackpadServer.device_get_digitizer_physical_size(device_id:int) -> Vector2i
-
-    // TrackpadServer.device_get_haptics_disabled(device_id:int) -> bool
-    // TrackpadServer.device_set_haptics_disabled(device_id:int, disabled:bool) -> void
-
-    // TrackpadServer.device_register_input_callback(device_id:int, callback:Callable) -> void
-
-    
     virtual bool device_is_haptics_available(TrackpadDeviceID device_id) { return false; }
-    virtual bool get_haptics_disabled() { return true; }
-    virtual Error set_haptics_disabled(bool disable) { return FAILED; }
-
+    virtual bool device_get_haptics_disabled(TrackpadDeviceID device_id) { return false; }
+    virtual Error device_set_haptics_disabled(TrackpadDeviceID device_id, bool disable) { return FAILED; }
 };
 
 

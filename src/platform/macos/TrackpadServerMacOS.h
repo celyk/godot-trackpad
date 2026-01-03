@@ -35,13 +35,13 @@ public:
     TrackpadServerMacOS();
     ~TrackpadServerMacOS();
 
-    virtual void register_input_callback(Callable callback) override;
+    virtual void device_register_input_callback(TrackpadDeviceID device_id, Callable callback) override;
     
-    virtual Vector2i get_digitizer_resolution() override;
-    virtual Vector2i get_digitizer_physical_size() override;
+    virtual Vector2i device_get_digitizer_resolution(TrackpadDeviceID device_id) override;
+    virtual Vector2i device_get_digitizer_physical_size(TrackpadDeviceID device_id) override;
 
-    virtual bool get_haptics_disabled() override;
-    virtual Error set_haptics_disabled(bool disable) override;
+    virtual bool device_get_haptics_disabled(TrackpadDeviceID device_id) override;
+    virtual Error device_set_haptics_disabled(TrackpadDeviceID device_id, bool disable) override;
 };
 
 

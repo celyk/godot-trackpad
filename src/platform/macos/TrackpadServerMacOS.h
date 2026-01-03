@@ -23,6 +23,10 @@ class TrackpadServerMacOS : public TrackpadServer {
 
 private:
     MyObjCClass* objc_wrapper;
+    //friend class MyObjCClass;
+
+public:
+    void handle_touch_event(Ref<TrackpadTouch> event);
 
 protected:
 	static void _bind_methods() {};
@@ -31,7 +35,6 @@ public:
     TrackpadServerMacOS();
     ~TrackpadServerMacOS();
 
-    virtual void handle_touch_event(Ref<TrackpadTouch> event) override;
     virtual void register_input_callback(Callable callback) override;
     
     virtual Vector2i get_digitizer_resolution() override;

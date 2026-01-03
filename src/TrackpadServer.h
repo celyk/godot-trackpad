@@ -19,8 +19,6 @@ class TrackpadServer : public Object {
 protected:
 	static void _bind_methods();
 
-    Callable primary_touch_callback;
-
     bool haptics_disabled = false;
 
 public:

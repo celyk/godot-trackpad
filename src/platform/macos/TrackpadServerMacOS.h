@@ -25,6 +25,11 @@ private:
     MyObjCClass* objc_wrapper;
     //friend class MyObjCClass;
 
+    TrackpadDeviceID primary_device = -1;
+    TypedArray<TrackpadDeviceID> device_list;
+
+    Callable primary_touch_callback;
+    
 public:
     void handle_touch_event(Ref<TrackpadTouch> event);
 
@@ -35,11 +40,15 @@ public:
     TrackpadServerMacOS();
     ~TrackpadServerMacOS();
 
+    virtual TrackpadDeviceID get_primary_device() override { return primary_device; }
+    virtual TypedArray<TrackpadDeviceID> get_device_list() override { return device_list; }
+
     virtual void device_register_input_callback(TrackpadDeviceID device_id, Callable callback) override;
-    
+
     virtual Vector2i device_get_digitizer_resolution(TrackpadDeviceID device_id) override;
     virtual Vector2i device_get_digitizer_physical_size(TrackpadDeviceID device_id) override;
 
+    virtual bool device_is_haptics_available(TrackpadDeviceID device_id) override { return true; }
     virtual bool device_get_haptics_disabled(TrackpadDeviceID device_id) override;
     virtual Error device_set_haptics_disabled(TrackpadDeviceID device_id, bool disable) override;
 };

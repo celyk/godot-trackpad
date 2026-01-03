@@ -18,6 +18,9 @@ func _ready() -> void:
 		add_child(TouchscreenEmulation.new())
 
 func _on_trackpad_event(touch:TrackpadTouch):
+	#if touch.state != 4:
+	#	print("Touch state: ", touch.state)
+	
 	trackpad_touch.emit.call_deferred(touch)
 
 func _on_touch(touch:TrackpadTouch):

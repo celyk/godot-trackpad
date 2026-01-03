@@ -27,6 +27,9 @@ func _ready() -> void:
 			var touchscreen_emulation_draw = TouchscreenEmulationDebugDraw.new()
 			add_child(touchscreen_emulation_draw)
 
+func _exit_tree() -> void:
+	TrackpadServer.device_set_haptics_disabled(TrackpadServer.get_primary_device(), false)
+	
 func _on_trackpad_event(touch:TrackpadTouch):
 	if touchscreen_emulation_callback:
 		touchscreen_emulation_callback.call_deferred(0, touch)

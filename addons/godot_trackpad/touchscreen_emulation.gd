@@ -6,13 +6,17 @@ const max_touches := 10
 # From the minimal id to the raw TrackpadTouch
 var prev_touch_map : Dictionary[int, TrackpadTouch]
 var touch_map : Dictionary[int, TrackpadTouch]
-var inverse_touch_map : Dictionary[int, TrackpadTouch]
+var inverse_touch_map : Dictionary[int, int] # identifier -> id
 
 func _ready() -> void:
 	if Engine.is_editor_hint():
 		set_process(false)
+	
+	TrackpadServerAddon.touchscreen_emulation_callback = _process_touch
 
 func _process(delta: float) -> void:
+	return
+	
 	var touch_queue : Array[TrackpadTouch] = _get_touch_queue()
 	
 	var window_id := 0
@@ -47,7 +51,7 @@ func _process_touch(window_id:int, touch:TrackpadTouch) -> void:
 			
 			var prev_touch_pos := _normalized_pos_to_screen(prev_touch.position)
 			
-			var id := _find_touch_id(prev_touch)
+			var id := inverse_touch_map[prev_touch.id]
 			
 			touch_drag(
 					window_id,
@@ -65,7 +69,8 @@ func _process_touch(window_id:int, touch:TrackpadTouch) -> void:
 			
 		TrackpadTouch.leaving:
 			var prev_touch := _get_touch(touch)
-			var id := _find_touch_id(prev_touch)
+			
+			var id := inverse_touch_map[prev_touch.id]
 			
 			touch_press(
 					window_id,
@@ -95,6 +100,7 @@ func _find_touch_id(touch:TrackpadTouch) -> int:
 	return touch_map.values().find_custom(foo.bind(touch.id))
 
 func _get_touch(touch:TrackpadTouch) -> TrackpadTouch:
+	return touch_map[inverse_touch_map[touch.id]]
 	return touch_map.get(_find_touch_id(touch))
 
 func _is_touch_free(touch:TrackpadTouch) -> bool:
@@ -121,6 +127,7 @@ func get_lowest_index_available_for_touch(touch:TrackpadTouch) -> int:
 func _initial_touch_insert(touch:TrackpadTouch) -> void:
 	var id := get_lowest_index_available_for_touch(touch)
 	touch_map[id] = touch
+	inverse_touch_map[touch.id] = id
 
 func _get_touch_queue() -> Array[TrackpadTouch]:
 	var queue := TrackpadServerAddon.touches_cache.duplicate()
@@ -130,11 +137,11 @@ func _get_touch_queue() -> Array[TrackpadTouch]:
 	return queue
 
 func _update_touch(touch:TrackpadTouch) -> void:
-	var id := _find_touch_id(touch)
+	var id := inverse_touch_map[touch.id]
 	touch_map[id] = touch
 
 func _final_touch_remove(touch:TrackpadTouch) -> void:
-	var id := _find_touch_id(touch)
+	var id := inverse_touch_map[touch.id]
 	touch_map.erase(id)
 
 func _normalized_pos_to_screen(p:Vector2) -> Vector2:

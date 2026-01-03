@@ -9,6 +9,7 @@ var prev_touches_cache : Array[TrackpadTouch] = []
 signal trackpad_touch(touch:TrackpadTouch)
 
 const TouchscreenEmulation = preload("uid://bhwwj71jhevtg")
+var touchscreen_emulation_callback : Callable
 
 func _ready() -> void:
 	var device := TrackpadServer.get_primary_device()
@@ -24,6 +25,9 @@ func _on_trackpad_event(touch:TrackpadTouch):
 		#print("Touch state: ", touch.state)
 		pass
 	
+	if touchscreen_emulation_callback:
+		touchscreen_emulation_callback.call_deferred(0, touch)
+	
 	trackpad_touch.emit.call_deferred(touch)
 
 func _on_touch(touch:TrackpadTouch):
@@ -34,6 +38,7 @@ func _process(delta: float) -> void:
 	
 	prev_touches_cache = touches_cache
 	touches_cache.clear()
+
 
 func _print_touch(touch:TrackpadTouch):
 	print(var_to_str(touch))

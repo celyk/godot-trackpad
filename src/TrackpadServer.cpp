@@ -12,7 +12,7 @@ void TrackpadServer::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("device_get_digitizer_physical_size", "device"), &TrackpadServer::device_get_digitizer_physical_size);
 	ClassDB::bind_method(D_METHOD("device_is_haptics_available", "device"), &TrackpadServer::device_is_haptics_available);
 	ClassDB::bind_method(D_METHOD("device_get_haptics_disabled", "device"), &TrackpadServer::device_get_haptics_disabled);
-	ClassDB::bind_method(D_METHOD("device_set_haptics_disabled", "device", "disabled"), &TrackpadServer::device_set_haptics_disabled);
+	ClassDB::bind_method(D_METHOD("device_set_haptics_disabled", "device", "disable"), &TrackpadServer::device_set_haptics_disabled);
 }
 
 godot::TrackpadServer::TrackpadServer()

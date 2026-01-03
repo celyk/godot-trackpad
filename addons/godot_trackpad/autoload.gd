@@ -20,8 +20,9 @@ func _ready() -> void:
 		add_child(TouchscreenEmulation.new())
 
 func _on_trackpad_event(touch:TrackpadTouch):
-	if touch.state != 4:
-		print("Touch state: ", touch.state)
+	if touch.state != 4 and not Engine.is_editor_hint():
+		#print("Touch state: ", touch.state)
+		pass
 	
 	trackpad_touch.emit.call_deferred(touch)
 

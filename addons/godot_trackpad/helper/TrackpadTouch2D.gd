@@ -11,7 +11,8 @@ func _process(delta: float) -> void:
 	if not touches.is_empty():
 		var primary_touch : TrackpadTouch = touches.front()
 		
-		var size : Vector2 = TrackpadServer.device_get_digitizer_physical_size()
+		var device := TrackpadServer.get_primary_device()
+		var size : Vector2 = TrackpadServer.device_get_digitizer_physical_size(device)
 		
 		position = primary_touch.position
 		position.y = 1.0 - position.y

@@ -1,8 +1,10 @@
 @tool
 extends Node
 
-var touches_cache : Dictionary[int,TrackpadTouch] = {}
-var prev_touches_cache : Dictionary[int,TrackpadTouch] = {}
+#var touches_cache : Dictionary[int,TrackpadTouch] = {}
+#var prev_touches_cache : Dictionary[int,TrackpadTouch] = {}
+var touches_cache : Array[TrackpadTouch] = []
+var prev_touches_cache : Array[TrackpadTouch] = []
 
 signal trackpad_touch(touch:TrackpadTouch)
 
@@ -18,13 +20,13 @@ func _ready() -> void:
 		add_child(TouchscreenEmulation.new())
 
 func _on_trackpad_event(touch:TrackpadTouch):
-	#if touch.state != 4:
-	#	print("Touch state: ", touch.state)
+	if touch.state != 4:
+		print("Touch state: ", touch.state)
 	
 	trackpad_touch.emit.call_deferred(touch)
 
 func _on_touch(touch:TrackpadTouch):
-	touches_cache[touch.id] = touch
+	touches_cache.append(touch)
 
 func _process(delta: float) -> void:
 	await RenderingServer.frame_post_draw

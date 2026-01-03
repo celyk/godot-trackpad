@@ -44,11 +44,11 @@ using namespace godot;
 
 
 void TrackpadServerMacOS::handle_touch_event(Ref<TrackpadTouch> event) {
-	if(touch_callback.is_null()) {
+	if(primary_touch_callback.is_null()) {
 		return;
 	}
 
-	touch_callback.call(event);
+	primary_touch_callback.call(event);
 }
 
 TrackpadServerMacOS::TrackpadServerMacOS() {
@@ -76,11 +76,11 @@ TrackpadServerMacOS::~TrackpadServerMacOS() {
 	objc_wrapper = nil;
 }
 
-void TrackpadServerMacOS::registerInputCallback(Callable callback) {
-	touch_callback = callback;
+void TrackpadServerMacOS::register_input_callback(Callable callback) {
+	primary_touch_callback = callback;
 }
 
-Vector2i TrackpadServerMacOS::getDigitizerResolution() {
+Vector2i TrackpadServerMacOS::get_digitizer_resolution() {
 	MTDeviceRef device = objc_wrapper->device;
 	
 	if (!device){
@@ -101,7 +101,7 @@ Vector2i TrackpadServerMacOS::getDigitizerResolution() {
 }
 
 // width and height are returned in hundreds of mm
-Vector2i TrackpadServerMacOS::getDigitizerPhysicalSize() {
+Vector2i TrackpadServerMacOS::get_digitizer_physical_size() {
 	MTDeviceRef device = objc_wrapper->device;
 	
 	if (!device){
@@ -119,11 +119,11 @@ Vector2i TrackpadServerMacOS::getDigitizerPhysicalSize() {
 	return Vector2i(width, height);
 }
 
-bool TrackpadServerMacOS::getHapticsDisabled() {
+bool TrackpadServerMacOS::get_haptics_disabled() {
 	return haptics_disabled;
 }
 
-Error TrackpadServerMacOS::setHapticsDisabled(bool disable) {
+Error TrackpadServerMacOS::set_haptics_disabled(bool disable) {
 	MTDeviceRef device = objc_wrapper->device;
 	
 	if (!device){

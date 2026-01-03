@@ -24,10 +24,6 @@ class TrackpadServerMacOS : public TrackpadServer {
 private:
     MyObjCClass* objc_wrapper;
 
-    Callable touch_callback;
-
-    bool haptics_disabled = false;
-
 protected:
 	static void _bind_methods() {};
 
@@ -35,12 +31,14 @@ public:
     TrackpadServerMacOS();
     ~TrackpadServerMacOS();
 
-    void handle_touch_event(Ref<TrackpadTouch> event) override;
-    void registerInputCallback(Callable callback) override;
-    Vector2i getDigitizerResolution() override;
-    Vector2i getDigitizerPhysicalSize() override;
-    bool getHapticsDisabled() override;
-    Error setHapticsDisabled(bool disable) override;
+    virtual void handle_touch_event(Ref<TrackpadTouch> event) override;
+    virtual void register_input_callback(Callable callback) override;
+    
+    virtual Vector2i get_digitizer_resolution() override;
+    virtual Vector2i get_digitizer_physical_size() override;
+
+    virtual bool get_haptics_disabled() override;
+    virtual Error set_haptics_disabled(bool disable) override;
 };
 
 

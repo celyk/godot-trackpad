@@ -9,10 +9,8 @@ var touch_map : Dictionary[int, TrackpadTouch]
 var inverse_touch_map : Dictionary[int, int] # identifier -> id
 
 func _ready() -> void:
-	if Engine.is_editor_hint():
-		set_process(false)
-	else:
-		TrackpadServerAddon.touchscreen_emulation_callback = _process_touch
+	name = "TouchScreenEmulation"
+	TrackpadServerAddon.touchscreen_emulation_callback = _process_touch
 
 func _process_touch(window_id:int, touch:TrackpadTouch) -> void:
 	var touch_pos := _normalized_pos_to_screen(touch.position)

@@ -1,6 +1,17 @@
 @tool
 extends Node
 
+var touchscreen_emulation_enabled := false :
+	set(value):
+		touchscreen_emulation_enabled = value
+		
+		if touchscreen_emulation_enabled:
+			var touchscreen_emulation = TouchscreenEmulation.new()
+			add_child(touchscreen_emulation)
+		else:
+			if $TouchScreenEmulation:
+				$TouchScreenEmulation.queue_free()
+
 #var touches_cache : Dictionary[int,TrackpadTouch] = {}
 #var prev_touches_cache : Dictionary[int,TrackpadTouch] = {}
 var touches_cache : Array[TrackpadTouch] = []
@@ -20,8 +31,8 @@ func _ready() -> void:
 	trackpad_touch.connect(_on_touch)
 	
 	if ProjectSettings.get_setting("godot_trackpad/input/emulate_screen_touch") == true:
-		var touchscreen_emulation = TouchscreenEmulation.new()
-		add_child(touchscreen_emulation)
+		if not Engine.is_editor_hint():
+			touchscreen_emulation_enabled = true
 		
 		if ProjectSettings.get_setting("godot_trackpad/input/display_screen_touches") == true:
 			var touchscreen_emulation_draw = TouchscreenEmulationDebugDraw.new()

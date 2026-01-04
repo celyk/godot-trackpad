@@ -11,10 +11,8 @@ def link_framework(framework_path, framework_name, header_path=""):
 
     if header_path == "": return
 
-    # Add the header path to the C++ compiler
-    env.Append(CPPPATH=["-F" + header_path])
-
     # Add the header path to the Objective-C++ compiler
+    env.Append(CPPPATH=["-F" + header_path])
     env.Append(CXXFLAGS=["-F" + header_path])
 
 if env["platform"] == "macos":

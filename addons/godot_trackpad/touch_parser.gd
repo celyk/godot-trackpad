@@ -9,7 +9,7 @@ func sort_touches(touches:Array[TrackpadTouch]) -> Array[TrackpadTouch]:
 	#sorted_touches.sort_custom(func(e:TrackpadTouch): if not e: return false)
 	
 	for touch in touches:
-		if touch.id < sorted_touches.size():
-			sorted_touches[touch.id] = touch
+		if touch.identifier < sorted_touches.size():
+			sorted_touches[touch.identifier] = touch
 	
 	return sorted_touches

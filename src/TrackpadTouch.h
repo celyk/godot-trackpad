@@ -23,7 +23,7 @@ public:
 	};
 
 private:
-    int id; //: Int32
+    int identifier; //: Int32
     Vector2 position;
     Vector2 normalized_position;
     float total; // total value of capacitance
@@ -38,8 +38,8 @@ protected:
 	static void _bind_methods();
 
 public:
-    int get_id() const;
-    void set_id(int p_id);
+    int get_identifier() const;
+    void set_identifier(int p_identifier);
     
     Vector2 get_position() const;
     void set_position(Vector2 p_position);

@@ -27,7 +27,7 @@ using namespace godot;
 		Ref<TrackpadTouch> godot_event;
 		godot_event.instantiate();
 
-		godot_event->set_id(int(touch.identifier));
+		godot_event->set_identifier(int(touch.identifier));
 		godot_event->set_position(Vector2(touch.posX, touch.posY) * Vector2(digitizer_resolution));
 		godot_event->set_normalized_position(Vector2(touch.posX, touch.posY));
 		godot_event->set_total(float(touch.total));

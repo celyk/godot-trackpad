@@ -4,7 +4,7 @@ class_name TrackpadTouch2D extends Node2D
 func _process(delta: float) -> void:
 	var touches := TrackpadServerAddon.touches_cache.duplicate()
 	
-	touches.sort_custom(func(a:TrackpadTouch, b:TrackpadTouch): return a.id < b.id)
+	touches.sort_custom(func(a:TrackpadTouch, b:TrackpadTouch): return a.identifier < b.identifier)
 	
 	#print(touches.map(func(e): return e.id))
 	

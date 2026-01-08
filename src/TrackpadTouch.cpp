@@ -5,8 +5,8 @@
 using namespace godot;
 
 void TrackpadTouch::_bind_methods() {
-	ClassDB::bind_method(D_METHOD("get_id"), &TrackpadTouch::get_id);
-	ClassDB::bind_method(D_METHOD("set_id", "id"), &TrackpadTouch::set_id);
+	ClassDB::bind_method(D_METHOD("get_identifier"), &TrackpadTouch::get_identifier);
+	ClassDB::bind_method(D_METHOD("set_identifier", "identifier"), &TrackpadTouch::set_identifier);
 	ClassDB::bind_method(D_METHOD("get_position"), &TrackpadTouch::get_position);
 	ClassDB::bind_method(D_METHOD("set_position", "position"), &TrackpadTouch::set_position);
 	ClassDB::bind_method(D_METHOD("get_normalized_position"), &TrackpadTouch::get_normalized_position);
@@ -26,7 +26,7 @@ void TrackpadTouch::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("get_timestamp"), &TrackpadTouch::get_timestamp);
 	ClassDB::bind_method(D_METHOD("set_timestamp", "timestamp"), &TrackpadTouch::set_timestamp);
 
-	ADD_PROPERTY(PropertyInfo(Variant::INT, "id"), "set_id", "get_id");
+	ADD_PROPERTY(PropertyInfo(Variant::INT, "identifier"), "set_identifier", "get_identifier");
 	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "position"), "set_position", "get_position");
 	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "normalized_position"), "set_normalized_position", "get_normalized_position");
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "total"), "set_total", "get_total");
@@ -48,11 +48,11 @@ void TrackpadTouch::_bind_methods() {
 }
 
 
-int TrackpadTouch::get_id() const {
-    return id;
+int TrackpadTouch::get_identifier() const {
+    return identifier;
 }
-void TrackpadTouch::set_id(int p_id) {	
-	id = p_id;
+void TrackpadTouch::set_identifier(int p_identifier) {	
+	identifier = p_identifier;
 }
 
 Vector2 TrackpadTouch::get_position() const {
@@ -63,10 +63,10 @@ void TrackpadTouch::set_position(Vector2 p_position) {
 }
 
 Vector2 TrackpadTouch::get_normalized_position() const {
-    return position;
+    return normalized_position;
 }
 void TrackpadTouch::set_normalized_position(Vector2 p_position) {
-    position = p_position;
+    normalized_position = p_position;
 }
 
 float TrackpadTouch::get_total() const {

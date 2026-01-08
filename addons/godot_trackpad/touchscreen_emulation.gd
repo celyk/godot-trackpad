@@ -13,7 +13,7 @@ func _ready() -> void:
 	TrackpadServerAddon.touchscreen_emulation_callback = _process_touch
 
 func _process_touch(window_id:int, touch:TrackpadTouch) -> void:
-	var touch_pos := _normalized_pos_to_screen(touch.position)
+	var touch_pos := _normalized_pos_to_screen(touch.normalized_position)
 	
 	match touch.state:
 		TrackpadTouch.starting:
@@ -37,7 +37,7 @@ func _process_touch(window_id:int, touch:TrackpadTouch) -> void:
 			# Ignore touches that began because the callback started running
 			if prev_touch == null: return
 			
-			var prev_touch_pos := _normalized_pos_to_screen(prev_touch.position)
+			var prev_touch_pos := _normalized_pos_to_screen(prev_touch.normalized_position)
 			
 			var id := inverse_touch_map[prev_touch.id]
 			

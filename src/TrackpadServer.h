@@ -26,7 +26,7 @@ public:
     virtual ~TrackpadServer();
 
     static TrackpadServer* singleton;
-    //static TrackpadServer* get_singleton() { return singleton; }
+    static TrackpadServer* get_singleton() { return singleton; }
 
     virtual TrackpadDeviceID get_primary_device() { return -1; }
     virtual TypedArray<TrackpadDeviceID> get_device_list() { return TypedArray<TrackpadDeviceID>(); }

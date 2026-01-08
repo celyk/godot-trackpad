@@ -42,7 +42,7 @@ void register_types() {
 	TrackpadServer::singleton = memnew(TrackpadServerWindows);
 #endif
 
-	Engine::get_singleton()->register_singleton("TrackpadServer", TrackpadServer::singleton);
+	Engine::get_singleton()->register_singleton("TrackpadServer", TrackpadServer::get_singleton());
 }
 
 void unregister_types() {

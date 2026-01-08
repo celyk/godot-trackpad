@@ -37,6 +37,9 @@ func _ready() -> void:
 		if ProjectSettings.get_setting("godot_trackpad/input/display_screen_touches") == true:
 			var touchscreen_emulation_draw = TouchscreenEmulationDebugDraw.new()
 			add_child(touchscreen_emulation_draw)
+	
+	if ProjectSettings.get_setting("godot_trackpad/input/mouse_capture") == true:
+		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 
 func _exit_tree() -> void:
 	TrackpadServer.device_set_haptics_disabled(TrackpadServer.get_primary_device(), false)

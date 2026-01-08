@@ -32,6 +32,7 @@ public:
     virtual TypedArray<TrackpadDeviceID> get_device_list() { return TypedArray<TrackpadDeviceID>(); }
 
     virtual void device_register_input_callback(TrackpadDeviceID device_id, Callable callback) { }
+    virtual void device_unregister_input_callback(TrackpadDeviceID device_id, Callable callback) { }
 
     virtual Vector2i device_get_digitizer_resolution(TrackpadDeviceID device_id) { return Vector2i(); }
     virtual Vector2i device_get_digitizer_physical_size(TrackpadDeviceID device_id) { return Vector2i(); }

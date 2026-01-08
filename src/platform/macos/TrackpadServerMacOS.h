@@ -47,6 +47,7 @@ public:
     virtual TypedArray<TrackpadDeviceID> get_device_list() override { return device_list; }
 
     virtual void device_register_input_callback(TrackpadDeviceID device_id, Callable callback) override;
+    virtual void device_unregister_input_callback(TrackpadDeviceID device_id, Callable callback) override;
 
     virtual Vector2i device_get_digitizer_resolution(TrackpadDeviceID device_id) override;
     virtual Vector2i device_get_digitizer_physical_size(TrackpadDeviceID device_id) override;

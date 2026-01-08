@@ -82,6 +82,12 @@ void TrackpadServerMacOS::device_register_input_callback(TrackpadDeviceID device
 	primary_touch_callback = callback;
 }
 
+void TrackpadServerMacOS::device_unregister_input_callback(TrackpadDeviceID device_id, Callable callback) {
+	if (primary_touch_callback == callback){
+		primary_touch_callback = Callable();
+	}
+}
+
 Vector2i TrackpadServerMacOS::device_get_digitizer_resolution(TrackpadDeviceID device_id) {
 	MTDeviceRef device = objc_wrapper->device;
 	

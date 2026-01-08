@@ -46,11 +46,15 @@ using namespace godot;
 
 
 void TrackpadServerMacOS::handle_touch_event(Ref<TrackpadTouch> event) {
-	if(primary_touch_callback.is_null()) {
-		return;
-	}
+	for (int i = 0; i < primary_touch_callbacks.size(); i ++){
+		Callable primary_touch_callback = primary_touch_callbacks[i];
 
-	primary_touch_callback.call(event);
+		if(primary_touch_callback.is_null()) {
+			continue;
+		}
+
+		primary_touch_callback.call(event);
+	}
 }
 
 TrackpadServerMacOS::TrackpadServerMacOS() {
@@ -78,14 +82,14 @@ TrackpadServerMacOS::~TrackpadServerMacOS() {
 	objc_wrapper = nil;
 }
 
-void TrackpadServerMacOS::device_register_input_callback(TrackpadDeviceID device_id, Callable callback) {
-	primary_touch_callback = callback;
+void TrackpadServerMacOS::device_register_input_callback(TrackpadDeviceID device_id, Callable callback) {	
+	for (int i = 0; i < primary_touch_callbacks.size(); i ++) {
+		primary_touch_callbacks.append(callback);
+	}
 }
 
 void TrackpadServerMacOS::device_unregister_input_callback(TrackpadDeviceID device_id, Callable callback) {
-	if (primary_touch_callback == callback){
-		primary_touch_callback = Callable();
-	}
+	primary_touch_callbacks.erase(callback);
 }
 
 Vector2i TrackpadServerMacOS::device_get_digitizer_resolution(TrackpadDeviceID device_id) {

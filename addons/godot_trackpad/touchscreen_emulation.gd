@@ -17,11 +17,11 @@ func _process_touch(window_id:int, touch:TrackpadTouch) -> void:
 	
 	match touch.state:
 		TrackpadTouch.starting:
-			var id := get_lowest_index_available_for_touch(touch)
+			var index := get_lowest_index_available_for_touch(touch)
 	
 			touch_press(
 					window_id,
-					id, 
+					index, 
 					touch_pos.x,
 					touch_pos.y,
 					true,
@@ -39,11 +39,11 @@ func _process_touch(window_id:int, touch:TrackpadTouch) -> void:
 			
 			var prev_touch_pos := _normalized_pos_to_screen(prev_touch.normalized_position)
 			
-			var id := inverse_touch_map[prev_touch.identifier]
+			var index := inverse_touch_map[prev_touch.identifier]
 			
 			touch_drag(
 					window_id,
-					id,
+					index,
 					prev_touch_pos.x,
 					prev_touch_pos.y,
 					touch_pos.x,
@@ -61,11 +61,11 @@ func _process_touch(window_id:int, touch:TrackpadTouch) -> void:
 			# Ignore touches that began because the callback started running
 			if prev_touch == null: return
 			
-			var id := inverse_touch_map[prev_touch.identifier]
+			var index := inverse_touch_map[prev_touch.identifier]
 			
 			touch_press(
 					window_id,
-					id, 
+					index, 
 					touch_pos.x,
 					touch_pos.y,
 					false,
@@ -76,20 +76,20 @@ func _process_touch(window_id:int, touch:TrackpadTouch) -> void:
 			_final_touch_remove(touch)
 
 func _initial_touch_insert(touch:TrackpadTouch) -> void:
-	var id := get_lowest_index_available_for_touch(touch)
-	touch_map[id] = touch
-	inverse_touch_map[touch.identifier] = id
+	var index := get_lowest_index_available_for_touch(touch)
+	touch_map[index] = touch
+	inverse_touch_map[touch.identifier] = index
 
 func _update_touch(touch:TrackpadTouch) -> void:
-	var id := inverse_touch_map[touch.identifier]
-	touch_map[id] = touch
+	var index := inverse_touch_map[touch.identifier]
+	touch_map[index] = touch
 
 func _final_touch_remove(touch:TrackpadTouch) -> void:
-	var id := inverse_touch_map[touch.identifier]
-	touch_map.erase(id)
+	var index := inverse_touch_map[touch.identifier]
+	touch_map.erase(index)
 
-func _find_touch_id(touch:TrackpadTouch) -> int:
-	return inverse_touch_map[touch.identifier]
+#func _find_touch_id(touch:TrackpadTouch) -> int:
+	#return inverse_touch_map[touch.identifier]
 
 func _get_touch(touch:TrackpadTouch) -> TrackpadTouch:
 	if inverse_touch_map.get(touch.identifier) == null: return null
@@ -97,7 +97,7 @@ func _get_touch(touch:TrackpadTouch) -> TrackpadTouch:
 	return touch_map[inverse_touch_map[touch.identifier]]
 
 func get_lowest_index_available_for_touch(touch:TrackpadTouch) -> int:
-	var id := 0
+	var index := 0
 	
 	touch_map.sort()
 	var sorted_keys := touch_map.keys()
@@ -105,10 +105,10 @@ func get_lowest_index_available_for_touch(touch:TrackpadTouch) -> int:
 	if not sorted_keys.is_empty():
 		for i in range(0, sorted_keys.back()+2):
 			if not (i in sorted_keys):
-				id = i
+				index = i
 				break
 	
-	return id
+	return index
 
 func _normalized_pos_to_screen(p:Vector2) -> Vector2:
 	p.y = 1.0 - p.y

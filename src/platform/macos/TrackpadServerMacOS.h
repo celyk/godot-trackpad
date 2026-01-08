@@ -40,6 +40,9 @@ public:
     TrackpadServerMacOS();
     ~TrackpadServerMacOS();
 
+    // static TrackpadServer* singleton;
+    // static TrackpadServer* get_singleton() { return singleton; }
+    
     virtual TrackpadDeviceID get_primary_device() override { return primary_device; }
     virtual TypedArray<TrackpadDeviceID> get_device_list() override { return device_list; }
 

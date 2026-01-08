@@ -23,35 +23,33 @@
 using namespace godot;
 
 
-TrackpadServer* trackpad_singleton;
-
 void register_types() {
     GDREGISTER_CLASS(TrackpadTouch);
 	GDREGISTER_ABSTRACT_CLASS(TrackpadServer);
 
 #if defined(MACOS_ENABLED)
     GDREGISTER_INTERNAL_CLASS(TrackpadServerMacOS);
-	trackpad_singleton = memnew(TrackpadServerMacOS);
+	TrackpadServer::singleton = memnew(TrackpadServerMacOS);
 #endif
 
 #if defined(LINUX_ENABLED)
     GDREGISTER_INTERNAL_CLASS(TrackpadServerLinux);
-	trackpad_singleton = memnew(TrackpadServerLinux);
+	TrackpadServer::singleton = memnew(TrackpadServerLinux);
 #endif
 
 #if defined(WINDOWS_ENABLED)
     GDREGISTER_INTERNAL_CLASS(TrackpadServerWindows);
-	trackpad_singleton = memnew(TrackpadServerWindows);
+	TrackpadServer::singleton = memnew(TrackpadServerWindows);
 #endif
 
-	Engine::get_singleton()->register_singleton("TrackpadServer", trackpad_singleton);
+	Engine::get_singleton()->register_singleton("TrackpadServer", TrackpadServer::singleton);
 }
 
 void unregister_types() {
 	Engine::get_singleton()->unregister_singleton("TrackpadServer");
 
-	if (trackpad_singleton) {
-        memdelete(trackpad_singleton);
-        trackpad_singleton = nullptr;
+	if (TrackpadServer::singleton) {
+        memdelete(TrackpadServer::singleton);
+        TrackpadServer::singleton = nullptr;
     }
 }

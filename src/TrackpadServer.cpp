@@ -4,6 +4,8 @@
 
 using namespace godot;
 
+TrackpadServer *TrackpadServer::singleton = nullptr;
+
 void TrackpadServer::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("get_primary_device"), &TrackpadServer::get_primary_device);
 	ClassDB::bind_method(D_METHOD("get_device_list"), &TrackpadServer::get_device_list);

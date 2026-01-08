@@ -25,6 +25,7 @@ public:
 private:
     int id; //: Int32
     Vector2 position;
+    Vector2 normalized_position;
     float total; // total value of capacitance
     float pressure;
     Vector2 axis;
@@ -42,6 +43,9 @@ public:
     
     Vector2 get_position() const;
     void set_position(Vector2 p_position);
+
+    Vector2 get_normalized_position() const;
+    void set_normalized_position(Vector2 p_position);
     
     float get_total() const;
     void set_total(float p_total);

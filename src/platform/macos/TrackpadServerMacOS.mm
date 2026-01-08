@@ -22,12 +22,14 @@ using namespace godot;
 @implementation MyObjCClass
 - (void)handleMultitouchEvent:(OpenMTEvent *)event {
 	for (OpenMTTouch* touch in event.touches){
+		Vector2i digitizer_resolution = cppInstance->device_get_digitizer_resolution(cppInstance->get_primary_device());
 
 		Ref<TrackpadTouch> godot_event;
 		godot_event.instantiate();
 
 		godot_event->set_id(int(touch.identifier));
-		godot_event->set_position(Vector2(touch.posX, touch.posY));
+		godot_event->set_position(Vector2(touch.posX, touch.posY) * Vector2(digitizer_resolution));
+		godot_event->set_normalized_position(Vector2(touch.posX, touch.posY));
 		godot_event->set_total(float(touch.total));
 		godot_event->set_pressure(float(touch.pressure));
 		godot_event->set_axis(Vector2(touch.minorAxis, touch.majorAxis));

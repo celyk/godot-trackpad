@@ -9,6 +9,8 @@ void TrackpadTouch::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("set_id", "id"), &TrackpadTouch::set_id);
 	ClassDB::bind_method(D_METHOD("get_position"), &TrackpadTouch::get_position);
 	ClassDB::bind_method(D_METHOD("set_position", "position"), &TrackpadTouch::set_position);
+	ClassDB::bind_method(D_METHOD("get_normalized_position"), &TrackpadTouch::get_normalized_position);
+	ClassDB::bind_method(D_METHOD("set_normalized_position", "position"), &TrackpadTouch::set_normalized_position);
 	ClassDB::bind_method(D_METHOD("get_total"), &TrackpadTouch::get_total);
 	ClassDB::bind_method(D_METHOD("set_total", "total"), &TrackpadTouch::set_total);
 	ClassDB::bind_method(D_METHOD("get_pressure"), &TrackpadTouch::get_pressure);
@@ -56,6 +58,13 @@ Vector2 TrackpadTouch::get_position() const {
     return position;
 }
 void TrackpadTouch::set_position(Vector2 p_position) {
+    position = p_position;
+}
+
+Vector2 TrackpadTouch::get_normalized_position() const {
+    return position;
+}
+void TrackpadTouch::set_normalized_position(Vector2 p_position) {
     position = p_position;
 }
 

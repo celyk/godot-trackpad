@@ -28,7 +28,7 @@ private:
     TrackpadDeviceID primary_device = -1;
     TypedArray<TrackpadDeviceID> device_list;
 
-    TypedArray<Callable> primary_touch_callbacks;
+    Vector<Callable> primary_touch_callbacks;
     
 public:
     void handle_touch_event(Ref<TrackpadTouch> event);

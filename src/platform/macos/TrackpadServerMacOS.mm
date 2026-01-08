@@ -46,14 +46,14 @@ using namespace godot;
 
 
 void TrackpadServerMacOS::handle_touch_event(Ref<TrackpadTouch> event) {
-	for (int i = 0; i < primary_touch_callbacks.size(); i ++){
+	for (int i = 0; i < primary_touch_callbacks.size(); i++){
 		Callable primary_touch_callback = primary_touch_callbacks[i];
 
-		if(primary_touch_callback.is_null()) {
+		if(primary_touch_callbacks[i].is_null()) {
 			continue;
 		}
 
-		primary_touch_callback.call(event);
+		primary_touch_callbacks[i].call(event);
 	}
 }
 
@@ -83,9 +83,7 @@ TrackpadServerMacOS::~TrackpadServerMacOS() {
 }
 
 void TrackpadServerMacOS::device_register_input_callback(TrackpadDeviceID device_id, Callable callback) {	
-	for (int i = 0; i < primary_touch_callbacks.size(); i ++) {
-		primary_touch_callbacks.append(callback);
-	}
+	primary_touch_callbacks.push_back(callback);
 }
 
 void TrackpadServerMacOS::device_unregister_input_callback(TrackpadDeviceID device_id, Callable callback) {

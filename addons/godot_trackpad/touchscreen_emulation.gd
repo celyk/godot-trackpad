@@ -14,15 +14,13 @@ func _process_touch(window_id:int, touch:TrackpadTouch) -> void:
 	var prev_touch : TrackpadTouch = touch_parser._get_touch(touch)
 	var prev_index : int = -1
 	if prev_touch != null:
-		prev_index = touch_parser.inverse_touch_map.get(prev_touch.identifier, -1)
+		prev_index = touch_parser.touch_get_index(touch)
 	
 	touch_parser._process_touch(window_id, touch)
 	
 	match touch.state:
 		TrackpadTouch.starting:
 			var index : int = touch_parser.touch_get_index(touch)
-			
-			#var current_touch : TrackpadTouch = touch_parser._get_touch(touch)
 			
 			touch_press(
 					window_id,
@@ -31,10 +29,6 @@ func _process_touch(window_id:int, touch:TrackpadTouch) -> void:
 					touch_pos.y,
 					true,
 					false)
-			
-			#print("starting id: ", id)
-			
-			#touch_parser._initial_touch_insert(touch)
 		
 		TrackpadTouch.touching:
 			# Ignore touches that began because the callback started running
@@ -54,8 +48,6 @@ func _process_touch(window_id:int, touch:TrackpadTouch) -> void:
 					touch.pressure,
 					touch.axis)
 			
-			#touch_parser._update_touch(touch)
-			
 		TrackpadTouch.leaving:
 			# Ignore touches that began because the callback started running
 			if prev_touch == null: return
@@ -69,10 +61,6 @@ func _process_touch(window_id:int, touch:TrackpadTouch) -> void:
 					touch_pos.y,
 					false,
 					false)
-			
-			#print("leaving id: ", id)
-			
-			#touch_parser._final_touch_remove(touch)
 
 func _normalized_pos_to_screen(p:Vector2) -> Vector2:
 	p = p * Vector2(get_viewport().size)

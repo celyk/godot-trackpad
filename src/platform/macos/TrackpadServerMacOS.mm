@@ -28,8 +28,8 @@ using namespace godot;
 		godot_event.instantiate();
 
 		godot_event->set_identifier(int(touch.identifier));
-		godot_event->set_position(Vector2(touch.posX, touch.posY) * Vector2(digitizer_resolution));
-		godot_event->set_normalized_position(Vector2(touch.posX, touch.posY));
+		godot_event->set_normalized_position(Vector2(touch.posX, 1.0 - touch.posY));
+		godot_event->set_position(godot_event->get_normalized_position() * Vector2(digitizer_resolution));
 		godot_event->set_total(float(touch.total));
 		godot_event->set_pressure(float(touch.pressure));
 		godot_event->set_axis(Vector2(touch.minorAxis, touch.majorAxis));

@@ -6,18 +6,25 @@ var touch_parser = TouchParser.new()
 
 func _ready() -> void:
 	name = "TouchScreenEmulation"
-	TrackpadServerAddon.touchscreen_emulation_callback = _process_touch
+	TrackpadServer.device_register_input_callback(TrackpadServer.get_primary_device(), _on_trackpad_event)
+
+func _on_trackpad_event(touch:TrackpadTouch) -> void:
+	_process_touch.call_deferred(DisplayServer.MAIN_WINDOW_ID, touch)
 
 func _process_touch(window_id:int, touch:TrackpadTouch) -> void:
+	# Map the trackpad edge to edge with the game window.
 	var touch_pos := _normalized_pos_to_screen(touch.normalized_position)
 	
+	# Get the cached TrackpadTouch before updating the touch parser.
 	var prev_touch : TrackpadTouch = touch_parser._get_touch(touch)
 	var prev_index : int = -1
 	if prev_touch != null:
 		prev_index = touch_parser.touch_get_index(touch)
 	
+	# Update the touch parser.
 	touch_parser._process_touch(window_id, touch)
 	
+	# Emulate touch screen events.
 	match touch.state:
 		TrackpadTouch.starting:
 			var index : int = touch_parser.touch_get_index(touch)

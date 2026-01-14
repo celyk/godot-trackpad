@@ -2,9 +2,23 @@
 extends Node
 
 # From the minimal id to the raw TrackpadTouch
-var prev_touch_map : Dictionary[int, TrackpadTouch]
+#var prev_touch_map : Dictionary[int, TrackpadTouch]
 var touch_map : Dictionary[int, TrackpadTouch]
 var inverse_touch_map : Dictionary[int, int] # identifier -> id
+
+func touch_get_index(touch:TrackpadTouch) -> int:
+	var prev_touch := _get_touch(touch)
+	if prev_touch == null: return -1
+	
+	return inverse_touch_map.get(prev_touch.identifier, -1)
+#
+#func touch_just_pressed(touch:TrackpadTouch) -> bool:
+	#var index : int = touch_get_index(touch)
+	#return prev_touch_map.get(index, null) == null and touch_map.get(index, null) != null
+#
+#func touch_just_released(touch:TrackpadTouch) -> bool:
+	#var index : int = touch_get_index(touch)
+	#return prev_touch_map.get(index, null) != null and touch_map.get(index, null) == null
 
 func _ready() -> void:
 	name = "TouchScreenParser"
@@ -14,18 +28,7 @@ func _process_touch(window_id:int, touch:TrackpadTouch) -> void:
 	
 	match touch.state:
 		TrackpadTouch.starting:
-			var index := get_lowest_index_available_for_touch(touch)
-	
-			#touch_press(
-					#window_id,
-					#index, 
-					#touch_pos.x,
-					#touch_pos.y,
-					#true,
-					#false)
-			
-			#print("starting id: ", id)
-			
+			var index : int = get_lowest_index_available_for_touch(touch)
 			_initial_touch_insert(touch)
 		
 		TrackpadTouch.touching:
@@ -36,19 +39,7 @@ func _process_touch(window_id:int, touch:TrackpadTouch) -> void:
 			
 			var prev_touch_pos := _normalized_pos_to_screen(prev_touch.normalized_position)
 			
-			var index := inverse_touch_map[prev_touch.identifier]
-			
-			#touch_drag(
-					#window_id,
-					#index,
-					#prev_touch_pos.x,
-					#prev_touch_pos.y,
-					#touch_pos.x,
-					#touch_pos.y,
-					#touch.pressure,
-					#touch.axis)
-			
-			#print("touching id: ", id)
+			var index : int = inverse_touch_map[prev_touch.identifier]
 			
 			_update_touch(touch)
 			
@@ -58,32 +49,24 @@ func _process_touch(window_id:int, touch:TrackpadTouch) -> void:
 			# Ignore touches that began because the callback started running
 			if prev_touch == null: return
 			
-			var index := inverse_touch_map[prev_touch.identifier]
-			
-			#touch_press(
-					#window_id,
-					#index, 
-					#touch_pos.x,
-					#touch_pos.y,
-					#false,
-					#false)
-			
-			#print("leaving id: ", id)
-			
 			_final_touch_remove(touch)
 
 func _initial_touch_insert(touch:TrackpadTouch) -> void:
 	var index := get_lowest_index_available_for_touch(touch)
 	touch_map[index] = touch
+	#prev_touch_map[index] = null
 	inverse_touch_map[touch.identifier] = index
 
 func _update_touch(touch:TrackpadTouch) -> void:
 	var index := inverse_touch_map[touch.identifier]
+	#prev_touch_map[index] = touch_map[index]
 	touch_map[index] = touch
 
 func _final_touch_remove(touch:TrackpadTouch) -> void:
 	var index := inverse_touch_map[touch.identifier]
+	#prev_touch_map[index] = touch_map[index]
 	touch_map.erase(index)
+	inverse_touch_map.erase(touch.identifier)
 
 #func _find_touch_id(touch:TrackpadTouch) -> int:
 	#return inverse_touch_map[touch.identifier]

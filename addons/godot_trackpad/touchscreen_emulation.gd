@@ -11,7 +11,12 @@ func _ready() -> void:
 func _process_touch(window_id:int, touch:TrackpadTouch) -> void:
 	var touch_pos := _normalized_pos_to_screen(touch.normalized_position)
 	
-	#touch_parser._process_touch(window_id, touch)
+	var prev_touch : TrackpadTouch = touch_parser._get_touch(touch)
+	var prev_index : int = -1
+	if prev_touch != null:
+		prev_index = touch_parser.inverse_touch_map.get(prev_touch.identifier, -1)
+	
+	touch_parser._process_touch(window_id, touch)
 	
 	match touch.state:
 		TrackpadTouch.starting:
@@ -27,21 +32,19 @@ func _process_touch(window_id:int, touch:TrackpadTouch) -> void:
 			
 			#print("starting id: ", id)
 			
-			touch_parser._initial_touch_insert(touch)
+			#touch_parser._initial_touch_insert(touch)
 		
 		TrackpadTouch.touching:
-			var prev_touch := touch_parser._get_touch(touch)
-			
 			# Ignore touches that began because the callback started running
 			if prev_touch == null: return
 			
-			var prev_touch_pos := _normalized_pos_to_screen(prev_touch.normalized_position)
+			assert(prev_index != -1)
 			
-			var index : int = touch_parser.inverse_touch_map[prev_touch.identifier]
+			var prev_touch_pos := _normalized_pos_to_screen(prev_touch.normalized_position)
 			
 			touch_drag(
 					window_id,
-					index,
+					prev_index,
 					prev_touch_pos.x,
 					prev_touch_pos.y,
 					touch_pos.x,
@@ -49,21 +52,17 @@ func _process_touch(window_id:int, touch:TrackpadTouch) -> void:
 					touch.pressure,
 					touch.axis)
 			
-			#print("touching id: ", id)
-			
-			touch_parser._update_touch(touch)
+			#touch_parser._update_touch(touch)
 			
 		TrackpadTouch.leaving:
-			var prev_touch := touch_parser._get_touch(touch)
-			
 			# Ignore touches that began because the callback started running
 			if prev_touch == null: return
 			
-			var index : int = touch_parser.inverse_touch_map[prev_touch.identifier]
+			assert(prev_index != -1)
 			
 			touch_press(
 					window_id,
-					index, 
+					prev_index, 
 					touch_pos.x,
 					touch_pos.y,
 					false,
@@ -71,7 +70,7 @@ func _process_touch(window_id:int, touch:TrackpadTouch) -> void:
 			
 			#print("leaving id: ", id)
 			
-			touch_parser._final_touch_remove(touch)
+			#touch_parser._final_touch_remove(touch)
 
 func _normalized_pos_to_screen(p:Vector2) -> Vector2:
 	p = p * Vector2(get_viewport().size)

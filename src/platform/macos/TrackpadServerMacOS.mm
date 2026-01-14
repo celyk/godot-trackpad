@@ -1,6 +1,7 @@
 #include "TrackpadServerMacOS.h"
 
 #include <godot_cpp/core/class_db.hpp>
+#include <godot_cpp/core/math.hpp>
 
 #import <OpenMultitouchSupportXCF/OpenMultitouchSupportXCF.h>
 
@@ -27,15 +28,26 @@ using namespace godot;
 		Ref<TrackpadTouch> godot_event;
 		godot_event.instantiate();
 
+		// Basically a hash.
 		godot_event->set_identifier(int(touch.identifier));
+
+		// The Y axis has to be flipped because we use a top left origin, whereas MultitouchSupport uses bottom left.
 		godot_event->set_normalized_position(Vector2(touch.posX, 1.0 - touch.posY));
+
+		// TODO: try to get this raw.
 		godot_event->set_position(godot_event->get_normalized_position() * Vector2(digitizer_resolution));
-		godot_event->set_total(float(touch.total));
+
 		godot_event->set_pressure(float(touch.pressure));
-		godot_event->set_axis(Vector2(touch.minorAxis, touch.majorAxis));
-		godot_event->set_angle(float(touch.angle));
+
+		// The ellipse is longest along the X axis. Rotate the ellipse by angle to get it in digitizer space.
+		godot_event->set_axis(Vector2(touch.majorAxis, touch.minorAxis));
+
+		// 0 may not be mapped properly, but whatever.
+		godot_event->set_angle(float(Math_PI - touch.angle));
+
+		godot_event->set_total(float(touch.total));
 		godot_event->set_density(float(touch.density));
-		godot_event->set_state((TrackpadTouch::TouchState)touch.state);
+		godot_event->set_state(TrackpadTouch::TouchState(touch.state));
 		godot_event->set_timestamp(touch.timestamp);
 
 		cppInstance->handle_touch_event(godot_event);

@@ -38,7 +38,7 @@ func _ready() -> void:
 			var touchscreen_emulation_draw = TouchscreenEmulationDebugDraw.new()
 			add_child(touchscreen_emulation_draw)
 	
-	if ProjectSettings.get_setting("godot_trackpad/input/mouse_capture") == true:
+	if (not Engine.is_editor_hint()) and ProjectSettings.get_setting("godot_trackpad/input/mouse_capture") == true:
 		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 
 func _exit_tree() -> void:

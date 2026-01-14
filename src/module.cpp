@@ -24,6 +24,8 @@ using namespace godot;
 
 
 void register_types() {
+    if (ClassDB::class_exists("TrackpadServer")){ return; }
+
     GDREGISTER_CLASS(TrackpadTouch);
 	GDREGISTER_ABSTRACT_CLASS(TrackpadServer);
 
@@ -46,7 +48,9 @@ void register_types() {
 }
 
 void unregister_types() {
-	Engine::get_singleton()->unregister_singleton("TrackpadServer");
+    if (Engine::get_singleton()->has_singleton("TrackpadServer")){
+	    Engine::get_singleton()->unregister_singleton("TrackpadServer");
+    }
 
 	if (TrackpadServer::singleton) {
         memdelete(TrackpadServer::singleton);

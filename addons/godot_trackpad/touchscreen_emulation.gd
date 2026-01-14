@@ -20,8 +20,10 @@ func _process_touch(window_id:int, touch:TrackpadTouch) -> void:
 	
 	match touch.state:
 		TrackpadTouch.starting:
-			var index : int = touch_parser.get_lowest_index_available_for_touch(touch)
-	
+			var index : int = touch_parser.touch_get_index(touch)
+			
+			#var current_touch : TrackpadTouch = touch_parser._get_touch(touch)
+			
 			touch_press(
 					window_id,
 					index, 

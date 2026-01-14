@@ -54,22 +54,16 @@ func _process_touch(window_id:int, touch:TrackpadTouch) -> void:
 func _initial_touch_insert(touch:TrackpadTouch) -> void:
 	var index := get_lowest_index_available_for_touch(touch)
 	touch_map[index] = touch
-	#prev_touch_map[index] = null
 	inverse_touch_map[touch.identifier] = index
 
 func _update_touch(touch:TrackpadTouch) -> void:
 	var index := inverse_touch_map[touch.identifier]
-	#prev_touch_map[index] = touch_map[index]
 	touch_map[index] = touch
 
 func _final_touch_remove(touch:TrackpadTouch) -> void:
 	var index := inverse_touch_map[touch.identifier]
-	#prev_touch_map[index] = touch_map[index]
 	touch_map.erase(index)
 	inverse_touch_map.erase(touch.identifier)
-
-#func _find_touch_id(touch:TrackpadTouch) -> int:
-	#return inverse_touch_map[touch.identifier]
 
 func _get_touch(touch:TrackpadTouch) -> TrackpadTouch:
 	if inverse_touch_map.get(touch.identifier) == null: return null

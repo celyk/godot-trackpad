@@ -11,7 +11,7 @@ func _ready() -> void:
 func _process_touch(window_id:int, touch:TrackpadTouch) -> void:
 	var touch_pos := _normalized_pos_to_screen(touch.normalized_position)
 	
-	touch_parser._process_touch(window_id, touch)
+	#touch_parser._process_touch(window_id, touch)
 	
 	match touch.state:
 		TrackpadTouch.starting:
@@ -74,7 +74,6 @@ func _process_touch(window_id:int, touch:TrackpadTouch) -> void:
 			touch_parser._final_touch_remove(touch)
 
 func _normalized_pos_to_screen(p:Vector2) -> Vector2:
-	p.y = 1.0 - p.y
 	p = p * Vector2(get_viewport().size)
 	return p
 

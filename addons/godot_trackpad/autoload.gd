@@ -31,6 +31,8 @@ func _ready() -> void:
 	if ProjectSettings.get_setting("godot_trackpad/input/emulate_screen_touch") == true:
 		if not Engine.is_editor_hint():
 			touchscreen_emulation_enabled = true
+			#Input.emulate_mouse_from_touch = false
+			Input.emulate_touch_from_mouse = false
 		
 		if ProjectSettings.get_setting("godot_trackpad/input/display_screen_touches") == true:
 			var touchscreen_emulation_draw = TouchscreenEmulationDebugDraw.new()
